@@ -58,6 +58,65 @@ function doLogin()
 
 }
 
+function doSignup()
+{
+	let firstName = document.getElementById("firstName").value;
+    let lastName = document.getElementById("lastName").value;
+	let login = document.getElementById("signupLoginName").value;
+    let password = document.getElementById("signupPassword").value;
+    let confirmPassword = document.getElementById("confirmSignupPassword").value;
+//  var hash = md5( password );
+
+    document.getElementById("signupResult").innerHTML = "";
+	
+    //check if passwords match
+	if (password != confirmPassword)
+	{
+		document.getElementById("signupResult").innerHTML = "Passwords do not match";
+        return;
+	}
+	let tmp = {firstName:firstName,lastName:lastName,login:login,password:password};
+//  var tmp = {firstName:firstName,lastName:lastName,login:login,password:password};
+    let jsonPayload = JSON.stringify( tmp );
+
+    let url = urlBase + '/Register.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+		xhr.onreadystatechange = function()
+		{
+			if (this.readyState == 4 && this.status == 200)
+			{
+				let jsonObject = JSON.parse( xhr.responseText );
+				
+				if( jsonObject.error && jsonObject.error != "")
+				{
+					document.getElementById("signupResult").innerHTML = jsonObject.error;
+					return;
+				}
+				
+				//success
+				document.getElementById("signupResult").innerHTML = "Account created successfully!";
+				
+				userId = jsonObject.id;
+				firstName = jsonObject.firstName;
+				lastName = jsonObject.lastName;
+				saveCookie();
+				window.location.href = "color.html";
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(err)
+	{
+		document.getElementById("signupResult").innerHTML = err.message;
+	}
+}
+
+
 function saveCookie()
 {
 	let minutes = 20;
