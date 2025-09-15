@@ -30,12 +30,12 @@
                 $searchEntries = sprintf 
                 (
                     '%s{
-                    "ID": "%d",
+                    "ID": "%s",
                     "FirstName": "%s",
                     "LastName": "%s",
                     "Phone": "%s",
                     "Email": "%s",
-                    "UserID": "%d"
+                    "UserID": "%s"
                     }',
                     $searchEntries, $row["ID"], $row["FirstName"], $row["LastName"], $row["Phone"], $row["Email"], $row["UserID"]
                 );
