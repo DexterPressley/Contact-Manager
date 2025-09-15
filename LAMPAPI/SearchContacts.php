@@ -48,7 +48,7 @@
 		}
 		else
 		{
-			returnWithError("No Records Found");
+			returnWithError("No Contacts Found");
 		}
 
 		$stmt->close();
@@ -68,7 +68,7 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"search":"",' . '"error":"' . $err . '"}';
+		$retValue = '{""entries:"",' . '"error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
