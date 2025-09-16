@@ -5,6 +5,7 @@
 
 	$searchEntries = "";
     $searchSize = 0;
+	$searchTerm = $inData["search"];
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
 	if( $conn->connect_error )
@@ -13,7 +14,14 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT * FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND userID = ?");
+		$stmt = $conn->prepare("SELECT * FROM Contacts WHERE 
+		(
+		FirstName LIKE ? OR 
+		LastName LIKE ? OR 
+		Phone LIKE ? OR 
+		Email LIKE ?
+		) AND 
+		userID = ?");
 		$searchTerm = "%" . $inData["search"] . "%"; # "Contains"-style search via %.
         $stmt->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $userId);
 		$stmt->execute();
@@ -23,10 +31,13 @@
         {
             while($row = $result->fetch_assoc())
             {
+				returnWithError("Made it into while loop");
                 # Iterative concatenation of search records.
                 if($searchSize > 0){
+					returnWithError("searchSize > 0");
                     $searchEntries = sprintf(',%s', $searchEntries);
                 }
+				returnWithError("Search size <= 0");
                 $searchEntries = sprintf 
                 (
                     '%s{
