@@ -35,7 +35,7 @@
 				$searchSize++;
                 # Iterative concatenation of search records.
                 if($searchSize > 1){
-					echo "Accumulation Step " + $searchSize;	
+					$searchEntries = sprintf('ADDING COMMA %d ', $searchSize);	
                     $searchEntries = sprintf(',%s', $searchEntries);
                 }
                 $searchEntries = sprintf 
