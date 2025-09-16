@@ -29,7 +29,7 @@
 		$result = $stmt->get_result();
 
 		$searchSize = $result->num_rows;
-		$searchIterator = 0;
+		$searchIterator = 1;
         if($searchSize > 0)
         {
             while($row = $result->fetch_assoc())
