@@ -5,6 +5,7 @@
 
 	$searchEntries = "";
     $searchSize = 0;
+	$userId = $inData["userId"];
 	$searchTerm = $inData["search"];
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
