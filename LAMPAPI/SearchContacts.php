@@ -28,16 +28,13 @@
 		$stmt->execute();
 		$result = $stmt->get_result();
 
-        if($result->num_rows > 0)
+		$searchSize = $result->num_rows;
+		$searchIterator = 0;
+        if($searchSize > 0)
         {
             while($row = $result->fetch_assoc())
             {
-				$searchSize++;
                 # Iterative concatenation of search records.
-                if($searchSize > 1){
-					$searchEntries = sprintf('%sADDING COMMA %d ', $searchEntries, $searchSize);	
-                    $searchEntries = sprintf(',%s', $searchEntries);
-                }
                 $searchEntries = sprintf 
                 (
                     '%s{
@@ -50,6 +47,10 @@
                     }',
                     $searchEntries, $row["ID"], $row["FirstName"], $row["LastName"], $row["Phone"], $row["Email"], $row["UserID"]
                 );
+				if($searchIterator < $searchSize){	
+                    $searchEntries = sprintf('%s,', $searchEntries);
+                }
+				$searchIterator++;
             }
         }
 		if($searchSize != 0)
