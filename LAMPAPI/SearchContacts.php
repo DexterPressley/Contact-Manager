@@ -24,7 +24,7 @@
 		) AND 
 		userID = ?");
 		$searchTerm = "%" . $inData["search"] . "%"; # "Contains"-style search via %.
-        $stmt->bind_param("sssss", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $userId);
+        $stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $userId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
@@ -32,26 +32,23 @@
         {
             while($row = $result->fetch_assoc())
             {
-				returnWithError("Made it into while loop");
+				$searchSize++;
                 # Iterative concatenation of search records.
-                if($searchSize > 0){
-					returnWithError("searchSize > 0");
+                if($searchSize > 1){
                     $searchEntries = sprintf(',%s', $searchEntries);
                 }
-				returnWithError("Search size <= 0");
                 $searchEntries = sprintf 
                 (
                     '%s{
-                    "ID": "%s",
+                    "ID": %d,
                     "FirstName": "%s",
                     "LastName": "%s",
                     "Phone": "%s",
                     "Email": "%s",
-                    "UserID": "%s"
+                    "UserID": %d
                     }',
                     $searchEntries, $row["ID"], $row["FirstName"], $row["LastName"], $row["Phone"], $row["Email"], $row["UserID"]
                 );
-                $searchSize++;
             }
         }
 		if($searchSize != 0)
