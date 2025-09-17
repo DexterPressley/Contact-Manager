@@ -5,6 +5,8 @@
 
 	$searchEntries = "";
     $searchSize = 0;
+	$userId = $inData["userId"];
+	$searchTerm = $inData["search"];
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
 	if( $conn->connect_error )
@@ -13,33 +15,42 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT * FROM Contacts WHERE (FirstName LIKE ? OR LastName LIKE ? OR Phone LIKE ? OR Email LIKE ?) AND userID = ?");
+		$stmt = $conn->prepare("SELECT * FROM Contacts WHERE 
+		(
+		FirstName LIKE ? OR 
+		LastName LIKE ? OR 
+		Phone LIKE ? OR 
+		Email LIKE ?
+		) AND 
+		userID = ?");
 		$searchTerm = "%" . $inData["search"] . "%"; # "Contains"-style search via %.
         $stmt->bind_param("ssssi", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $userId);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
-        if($result->num_rows > 0)
+		$searchSize = $result->num_rows;
+		$searchIterator = 1;
+        if($searchSize > 0)
         {
             while($row = $result->fetch_assoc())
             {
                 # Iterative concatenation of search records.
-                if($searchSize > 0){
-                    $searchEntries = sprintf(',%s', $searchEntries);
-                }
                 $searchEntries = sprintf 
                 (
                     '%s{
-                    "ID": "%d",
+                    "ID": %d,
                     "FirstName": "%s",
                     "LastName": "%s",
                     "Phone": "%s",
                     "Email": "%s",
-                    "UserID": "%d"
+                    "UserID": %d
                     }',
                     $searchEntries, $row["ID"], $row["FirstName"], $row["LastName"], $row["Phone"], $row["Email"], $row["UserID"]
                 );
-                $searchSize++;
+				if($searchIterator < $searchSize){	
+                    $searchEntries = sprintf('%s,', $searchEntries);
+                }
+				$searchIterator++;
             }
         }
 		if($searchSize != 0)
@@ -68,7 +79,7 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"entries:"",' . '"error":"' . $err . '"}';
+		$retValue = '{"entries":"","error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
