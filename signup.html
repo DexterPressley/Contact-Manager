@@ -1,26 +1,39 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-        <title>Contact Manager</title>
-        <script type="text/javascript" src="js/md5.js"></script>
-        <script type="text/javascript" src="js/code.js"></script>
-    <link href="css/styles.css" rel="stylesheet">       
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Manager</title>
+
+  <script type="text/javascript" src="js/md5.js"></script>
+  <script type="text/javascript" src="js/code.js"></script>
+  <link href="css/styles.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
 </head>
 <body>
-        <h1 id="title">Contact Manager</h1>
+  <h1 id="title">Contact Manager</h1>
 
-        <div id="signupDiv">
-                <button class="back-btn" onclick="window.location.href='index.html'"> Back </button>
-                <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Create New Account</h2>
+  <div id="signupDiv">
+    <button class="back-btn" onclick="window.location.href='index.html'">Back</button>
+    <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Create New Account</h2>
 
-                <input type="text" id="firstName" placeholder="First Name" /><br />
-                <input type="text" id="lastName" placeholder="Last Name" /><br />
-                <input type="text" id="signupLoginName" placeholder="Username" /><br />
-                <input type="password" id="signupPassword" placeholder="Password"/><br />
-                <input type="password" id="confirmSignupPassword" placeholder="Confirm Password" /><br />
-                <button type="button" id="signupButton" class="buttons" onclick="doSignup();"> Sign Up </button>
-                <span id="signupResult"></span>
-        </div>
+    <form id="signupForm">
+      <input type="text" id="firstName" placeholder="First Name" /><br />
+      <input type="text" id="lastName" placeholder="Last Name" /><br />
 
+      <!-- IDs below are what the validator expects -->
+      <input type="text" id="signupUsername" placeholder="Username" /><br />
+      <input type="text" id="signupEmail" placeholder="Email" /><br />
+      <input type="password" id="signupPassword" placeholder="Password" /><br />
+      <input type="password" id="signupConfirm" placeholder="Confirm Password" /><br />
+
+      <button type="submit" id="registerButton" class="buttons">Sign Up</button>
+      <span id="signupResult"></span>
+    </form>
+  </div>
+
+  <!-- Validation script at the end -->
+  <script src="form-validation.js"></script>
 </body>
 </html>
+

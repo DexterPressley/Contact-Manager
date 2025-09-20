@@ -1,25 +1,42 @@
-<html>
-	<head>
-		<title>Contact Manager</title>
-		<script type="text/javascript" src="js/md5.js"></script>
-		<script type="text/javascript" src="js/code.js"></script>
-		<link href="css/styles.css" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-	</head>
-	<body>
-		<h1 id="title">Contact Manager</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Manager</title>
 
-		<div id="loginDiv">
-			<span id="inner-title">Log in</span>
-			<input type="text" id="loginName" placeholder="Username" /><br />
-			<input type="password" id="loginPassword" placeholder="Password"/><br />
-			<button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Continue </button>
-			<span id="loginResult"></span>
-		</div>
+    <!-- Existing scripts/styles -->
+    <script type="text/javascript" src="js/md5.js"></script>
+    <script type="text/javascript" src="js/code.js"></script>
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
+  </head>
+  <body>
+    <h1 id="title">Contact Manager</h1>
 
-		<div id="signupButton">
-			<button type="button" id="signupButton" class="buttons" onclick="window.location.href='signup.html'"> Register Here </button>
-		</div>
+    <div id="loginDiv">
+      <form id="loginForm">
+        <span id="inner-title">Log in</span>
+        <input type="text" id="loginName" placeholder="Username" /><br />
+        <input type="password" id="loginPassword" placeholder="Password" /><br />
+        <button type="submit" id="loginButton" class="buttons">Continue</button>
+        <span id="loginResult"></span>
+      </form>
+    </div>
 
-	</body>
+    <div id="signupContainer">
+      <button
+        type="button"
+        id="signupButton"
+        class="buttons"
+        onclick="window.location.href='signup.html'"
+      >
+        Register Here
+      </button>
+    </div>
+
+    <!-- Validation script -->
+    <script src="form-validation.js"></script>
+  </body>
 </html>
+

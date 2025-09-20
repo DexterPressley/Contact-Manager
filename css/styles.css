@@ -138,3 +138,31 @@ select{
     font-family: 'Ubuntu', sans-serif;
     color: #95060a;
 }
+
+/* === Form Validation Styles === */
+/* Error message styling */
+.error {
+  color: #e74c3c;           /* red for visibility */
+  font-size: 0.9em;         /* slightly smaller than input text */
+  margin-top: 4px;          /* space under the input */
+  margin-bottom: 8px;       /* consistent spacing */
+  font-family: 'Ubuntu', sans-serif; /* match site font */
+}
+
+/* Highlight invalid inputs with a red border */
+input[aria-invalid="true"] {
+  border: 2px solid #e74c3c;
+  outline: none;
+}
+
+/*  Success state */
+input[aria-invalid="false"] {
+  border: 2px solid #2ecc71;   /* green border */
+  outline: none;
+}
+
+/* Neutral state for untouched inputs */
+input:not([aria-invalid]) {
+  border: 1px solid #ccc;
+}
+
