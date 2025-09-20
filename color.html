@@ -1,42 +1,65 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-        <title>Contact Manager</title>
-        <script type="text/javascript" src="js/code.js"></script>
-    <link href="css/styles.css" rel="stylesheet">       
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-        
-        <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() 
-        {
-                readCookie();
-        }, false);
-        </script>
-        
+  <meta charset="UTF-8" />
+  <title>Contact Manager</title>
+
+  <script type="text/javascript" src="js/code.js"></script>
+  <link href="css/styles.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
+
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      readCookie();
+    }, false);
+  </script>
 </head>
 <body>
 
-<h1 id="title">Contacts</h1>
+  <h1 id="title">Contacts</h1>
 
-<div id="loggedInDiv">
-        <span id="userName"></span><br />
-        <button type="button" id="logoutButton" class="buttons" onclick="doLogout();"> Log Out </button>
-</div>
+  <div id="loggedInDiv">
+    <span id="userName"></span><br />
+    <button type="button" id="logoutButton" class="buttons" onclick="doLogout();">Log Out</button>
+  </div>
 
-<div id="accessUIDiv">
-        <br />
+  <div id="accessUIDiv">
+    <br />
 
-        <!-- make sure to change everything to contact -->
+    <!-- Search Contacts -->
+    <input type="text" id="searchText" placeholder="Contact To Search For" />
+    <button type="button" id="searchColorButton" class="buttons" onclick="searchColor();">Search Contact</button><br />
+    <span id="colorSearchResult"></span>
+    <p id="colorList"></p>
+    <br /><br />
 
-        <input type="text" id="searchText" placeholder="Contact To Search For"/>
-        <button type="button" id="searchColorButton" class="buttons" onclick="searchColor();"> Search Contact </button><br />
-        <span id="colorSearchResult"></span>
-        <p id="colorList">
-        </p><br /><br />
+    <!-- Add Contact -->
+    <input type="text" id="colorText" placeholder="Contact To Add" />
+    <button type="button" id="addColorButton" class="buttons" onclick="addColor();">Add Contact</button><br />
+    <span id="colorAddResult"></span>
 
-        <input type="text" id="colorText" placeholder="Contact To Add">
-        <button type="button" id="addColorButton" class="buttons" onclick="addColor();"> Add Contact </button><br />
-        <span id="colorAddResult"></span>
-</div>
+    <br /><br />
+
+    <!-- Delete Contact -->
+    <div id="deleteContactDiv">
+      <h3 style="margin: 1rem 0 0.5rem;">Delete Contact</h3>
+      <input type="text" id="delFirst" placeholder="First Name" />
+      <input type="text" id="delLast" placeholder="Last Name" />
+      <button
+        type="button"
+        id="deleteContactButton"
+        class="buttons"
+        onclick="deleteContact(
+          document.getElementById('delFirst').value.trim(),
+          document.getElementById('delLast').value.trim()
+        );"
+      >
+        Delete
+      </button>
+      <span id="contactDeleteResult"></span>
+    </div>
+  </div>
 
 </body>
 </html>
+
