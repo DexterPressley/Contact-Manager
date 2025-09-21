@@ -207,11 +207,11 @@ function handleSearchInput() {
     const q = document.getElementById("searchText").value.trim();
     if (q.length === 0) {
       setSearchMessage("");
-      clearSearchResults();
-      return; // do not auto-load all contacts
+      clearSearchResults();  // hides table + clears body
+      return; // don't auto-load all contacts
     }
-    searchContacts(q);
-  }, 250); // feels snappy
+    searchContacts(q); // still call backend, filtering happens in renderSearchResults
+  }, 250); // slight delay feels snappy
 }
 
 // Keep existing search contact button working
@@ -232,9 +232,11 @@ function setSearchMessage(msg) {
 
 function clearSearchResults() {
   const body = document.getElementById("contactsBody");
+  const p    = document.getElementById("colorList");
+  const tbl  = document.getElementById("contactsTable");
   if (body) body.innerHTML = "";
-  const p = document.getElementById("colorList");
   if (p) p.innerHTML = "";
+  if (tbl) tbl.style.display = "none";
 }
 
 // Core search calling backend (SearchContacts.php)
@@ -290,39 +292,44 @@ function searchContacts(query) {
 // Render rows with Delete buttons
 function renderSearchResults(entries) {
   const body = document.getElementById("contactsBody");
-  const p = document.getElementById("colorList");
+  const p    = document.getElementById("colorList");
+  const tbl  = document.getElementById("contactsTable");
 
   if (body) body.innerHTML = "";
   if (p) p.innerHTML = "";
 
-  entries.forEach((item) => {
-    // Backend uses PascalCase keys
+  // Filter: FirstName starts with the query (case-insensitive)
+  const q = (document.getElementById("searchText").value || "").trim().toLowerCase();
+  const filtered = entries.filter(e => (e.FirstName || "").toLowerCase().startsWith(q));
+
+  // Toggle table visibility based on results
+  if (!filtered.length) {
+    if (tbl) tbl.style.display = "none";
+    return;
+  } else {
+    if (tbl) tbl.style.display = "table";
+  }
+
+  filtered.forEach((item) => {
     const first = item.FirstName || "";
     const last  = item.LastName  || "";
     const phone = item.Phone     || "";
     const email = item.Email     || "";
 
-    if (body) {
-      const tr = document.createElement("tr");
-      tr.setAttribute("data-first", first);
-      tr.setAttribute("data-last",  last);
-      tr.innerHTML = `
-        <td>${escapeHtml(first)}</td>
-        <td>${escapeHtml(last)}</td>
-        <td>${escapeHtml(phone)}</td>
-        <td>${escapeHtml(email)}</td>
-        <td><button class="buttons" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button></td>
-      `;
-      body.appendChild(tr);
-    } else if (p) {
-      // Fallback legacy list
-      const line = document.createElement("div");
-      line.innerHTML = `${escapeHtml(first)} ${escapeHtml(last)} | ${escapeHtml(phone)} | ${escapeHtml(email)}
-        <button class="buttons" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button>`;
-      p.appendChild(line);
-    }
+    const tr = document.createElement("tr");
+    tr.setAttribute("data-first", first);
+    tr.setAttribute("data-last",  last);
+    tr.innerHTML = `
+      <td>${escapeHtml(first)}</td>
+      <td>${escapeHtml(last)}</td>
+      <td>${escapeHtml(phone)}</td>
+      <td>${escapeHtml(email)}</td>
+      <td><button class="buttons" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button></td>
+    `;
+    body.appendChild(tr);
   });
 }
+
 
 // Helpers
 function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
