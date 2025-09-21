@@ -196,50 +196,138 @@ function addColor()
 	
 }
 
-function searchColor()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
+// ===== Debounced type-to-search =====
+let _searchTimer = null;
+let _inflightSearchXhr = null;
 
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + 'SearchColors' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						colorList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
-	
+// Called on input change
+function handleSearchInput() {
+  if (_searchTimer) clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => {
+    const q = document.getElementById("searchText").value.trim();
+    if (q.length === 0) {
+      setSearchMessage("");
+      clearSearchResults();
+      return; // do not auto-load all contacts
+    }
+    searchContacts(q);
+  }, 250); // feels snappy
 }
+
+// Keep existing search contact button working
+function searchColor() {
+  const q = document.getElementById("searchText").value.trim();
+  if (q.length === 0) {
+    setSearchMessage("Type something to search.");
+    clearSearchResults();
+    return;
+  }
+  searchContacts(q);
+}
+
+function setSearchMessage(msg) {
+  const el = document.getElementById("colorSearchResult");
+  if (el) el.textContent = msg || "";
+}
+
+function clearSearchResults() {
+  const body = document.getElementById("contactsBody");
+  if (body) body.innerHTML = "";
+  const p = document.getElementById("colorList");
+  if (p) p.innerHTML = "";
+}
+
+// Core search calling backend (SearchContacts.php)
+function searchContacts(query) {
+  if (!userId || userId < 1) {
+    setSearchMessage("Please log in.");
+    return;
+  }
+
+  setSearchMessage("Searching...");
+
+  // Abort previous request to avoid races
+  if (_inflightSearchXhr) {
+    try { _inflightSearchXhr.abort(); } catch (_) {}
+  }
+
+  const payload = JSON.stringify({ search: query, userId: userId });
+  const url = urlBase + 'SearchContacts' + extension; // matches PHP
+
+  const xhr = new XMLHttpRequest();
+  _inflightSearchXhr = xhr;
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4) return;
+
+    if (_inflightSearchXhr !== xhr) return; // ignore stale response
+    _inflightSearchXhr = null;
+
+    if (xhr.status !== 200) {
+      setSearchMessage("Search failed (HTTP " + xhr.status + ")");
+      clearSearchResults();
+      return;
+    }
+
+    let out = {};
+    try { out = JSON.parse(xhr.responseText); } catch (_) {}
+
+    if (out.error && out.error.length) {
+      setSearchMessage(out.error); // No Contacts Found
+      clearSearchResults();
+      return;
+    }
+
+    const entries = Array.isArray(out.entries) ? out.entries : [];
+    renderSearchResults(entries);
+    setSearchMessage(entries.length ? "Results found" : "No matching contacts");
+  };
+
+  xhr.send(payload);
+}
+
+// Render rows with Delete buttons
+function renderSearchResults(entries) {
+  const body = document.getElementById("contactsBody");
+  const p = document.getElementById("colorList");
+
+  if (body) body.innerHTML = "";
+  if (p) p.innerHTML = "";
+
+  entries.forEach((item) => {
+    // Backend uses PascalCase keys
+    const first = item.FirstName || "";
+    const last  = item.LastName  || "";
+    const phone = item.Phone     || "";
+    const email = item.Email     || "";
+
+    if (body) {
+      const tr = document.createElement("tr");
+      tr.setAttribute("data-first", first);
+      tr.setAttribute("data-last",  last);
+      tr.innerHTML = `
+        <td>${escapeHtml(first)}</td>
+        <td>${escapeHtml(last)}</td>
+        <td>${escapeHtml(phone)}</td>
+        <td>${escapeHtml(email)}</td>
+        <td><button class="buttons" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button></td>
+      `;
+      body.appendChild(tr);
+    } else if (p) {
+      // Fallback legacy list
+      const line = document.createElement("div");
+      line.innerHTML = `${escapeHtml(first)} ${escapeHtml(last)} | ${escapeHtml(phone)} | ${escapeHtml(email)}
+        <button class="buttons" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button>`;
+      p.appendChild(line);
+    }
+  });
+}
+
+// Helpers
+function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
+function jsStr(s){ return String(s ?? "").replace(/['\\]/g, "\\$&"); }
+
 
 function deleteContact(first, last) {
   // Make sure we have a logged-in userId

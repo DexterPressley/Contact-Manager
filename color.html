@@ -26,12 +26,21 @@
   <div id="accessUIDiv">
     <br />
 
-    <!-- Search Contacts -->
-    <input type="text" id="searchText" placeholder="Contact To Search For" />
-    <button type="button" id="searchColorButton" class="buttons" onclick="searchColor();">Search Contact</button><br />
-    <span id="colorSearchResult"></span>
-    <p id="colorList"></p>
-    <br /><br />
+<!-- Search Contacts -->
+<input type="text" id="searchText" placeholder="Search contacts..." oninput="handleSearchInput()" />
+<button type="button" id="searchColorButton" class="buttons" onclick="searchColor()">Search</button><br />
+<span id="colorSearchResult"></span>
+
+<table id="contactsTable" style="width:100%; margin-top:10px;">
+  <thead>
+    <tr><th>First</th><th>Last</th><th>Phone</th><th>Email</th><th></th></tr>
+  </thead>
+  <tbody id="contactsBody"></tbody>
+</table>
+
+<!-- Legacy container (hidden) -->
+<p id="colorList" style="display:none;"></p>
+
 
     <!-- Add Contact -->
     <input type="text" id="colorText" placeholder="Contact To Add" />
