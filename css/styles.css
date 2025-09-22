@@ -489,41 +489,42 @@ select{
   border-radius: 8px;
 }
 
-/* ============================
-   Login form layout polish
-============================ */
-#loginForm .row {
-  margin-bottom: 12px;   /* consistent spacing between rows */
+/* =========================================
+   Auth forms: consistent layout + sizing
+   - 2-column grid (label | input)
+   - errors sit under inputs
+   - full-width primary buttons
+========================================= */
+
+/* ------ LOGIN ------ */
+#loginForm .row{
+  display: grid;
+  grid-template-columns: 120px 1fr;   /* label | input */
+  gap: 6px 14px;
+  align-items: center;
+  margin-bottom: 12px;
 }
-
-#loginButton {
-  width: 100%;           /* full width under inputs */
-  padding: 10px;
-  font-size: 16px;
+#loginForm .row label{ grid-column: 1; }
+#loginForm .row input{ grid-column: 2; }
+#loginForm .row .error{
+  grid-column: 2;                     /* error under input */
+  margin-top: 4px;
 }
+/* Continue button spans full width */
+#loginForm .row button{ grid-column: 1 / -1; }
+#loginButton{ width: 100%; padding: 10px; font-size: 16px; }
 
-#loginCard .row:last-of-type .btn {
-  width: 100%;           /* full width for Register button too */
-  padding: 10px;
-  font-size: 16px;
-}
-
-/* Signup form spacing & full width button to match login */
-#signupForm .row { margin-bottom: 12px; }
-
-#signupButton {
+/* Make the “Register Here” row button full width too */
+#loginCard .row:last-of-type .btn{
   width: 100%;
   padding: 10px;
   font-size: 16px;
 }
 
-/* keep the top right "Back" button consistent */
-#signupCard .row .btn { padding: 6px 12px; font-size: 14px; }
-
-/* Signup form: align like login and place errors under inputs */
+/* ------ SIGNUP ------ */
 #signupForm .row{
   display: grid;
-  grid-template-columns: 120px 1fr;  /* label | input */
+  grid-template-columns: 120px 1fr;   /* label | input */
   gap: 6px 14px;
   align-items: center;
   margin-bottom: 12px;
@@ -531,14 +532,13 @@ select{
 #signupForm .row label{ grid-column: 1; }
 #signupForm .row input{ grid-column: 2; }
 #signupForm .row .error{
-  grid-column: 2;       /* stack under the input */
+  grid-column: 2;                     /* error under input */
   margin-top: 4px;
 }
+/* Sign Up button spans full width like Continue */
+#signupForm .row button{ grid-column: 1 / -1; }
+#signupButton{ width: 100%; padding: 10px; font-size: 16px; }
 
-/* Full-width primary button to match login */
-#signupButton{
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-}
+/* Keep the top-right “Back” button compact */
+#signupCard .row .btn{ padding: 6px 12px; font-size: 14px; }
 
