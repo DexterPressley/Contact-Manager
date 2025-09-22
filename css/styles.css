@@ -436,3 +436,56 @@ select{
   }
 }
 
+/* ============================
+   Consistent Buttons & Header
+============================ */
+
+/* Normalize all buttons */
+.btn {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* Keep danger variant consistent */
+.btn--danger {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--danger);
+}
+.btn--danger:hover {
+  background: var(--danger-hover);
+}
+
+/* Header strip cleanup */
+#loggedInDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  font-size: 16px;
+  background-color: #f3e9cf; /* matches theme */
+  border-radius: var(--radius);
+}
+
+#welcomeMsg {
+  font-weight: 600;
+  color: var(--text);
+}
+
+#logoutButton {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+/* Ensure inline Delete buttons in search results match */
+#contactsTable .btn.btn--danger {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+

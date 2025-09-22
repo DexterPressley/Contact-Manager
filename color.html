@@ -21,10 +21,10 @@
   <h1 id="title">Contacts</h1>
 
   <div class="container">
-    <div id="loggedInDiv" class="card card--thin" style="margin-bottom:16px;">
-      <span id="userName"></span>
-      <button type="button" id="logoutButton" class="btn" onclick="doLogout();">Log Out</button>
-    </div>
+<div id="loggedInDiv" class="card card--thin">
+  <span id="welcomeMsg">Welcome, <span id="userName"></span>!</span>
+  <button type="button" id="logoutButton" class="btn btn--danger" onclick="doLogout();">Log Out</button>
+</div>
 
     <div class="grid">
       <!-- Search -->
@@ -81,29 +81,33 @@
       </div>
 
       <!-- Delete -->
-      <div class="card">
-        <h3>Delete Contact</h3>
-        <div class="row">
-          <label for="delFirst">First Name</label>
-          <input type="text" id="delFirst" placeholder="First Name" />
+<div class="card">
+  <h3>Delete Contact</h3>
+  <div class="row">
+    <label for="delFirst">First Name</label>
+    <input type="text" id="delFirst" placeholder="First Name" />
+  </div>
+  <div class="row">
+    <label for="delLast">Last Name</label>
+    <input type="text" id="delLast" placeholder="Last Name" />
+  </div>
+  <div class="row">
+    <button
+      type="button"
+      id="deleteContactButton"
+      class="btn btn--danger"
+      onclick="deleteContact(
+        document.getElementById('delFirst').value.trim(),
+        document.getElementById('delLast').value.trim()
+      )"
+    >
+      Delete
+    </button>
+  </div>
+  <span id="contactDeleteResult" class="msg" role="status" aria-live="polite"></span>
+</div>
+	
 
-          <label for="delLast">Last Name</label>
-          <input type="text" id="delLast" placeholder="Last Name" />
-
-          <button
-            type="button"
-            id="deleteContactButton"
-            class="btn btn--danger"
-            onclick="deleteContact(
-              document.getElementById('delFirst').value.trim(),
-              document.getElementById('delLast').value.trim()
-            )"
-          >
-            Delete
-          </button>
-        </div>
-        <span id="contactDeleteResult" class="msg" role="status" aria-live="polite"></span>
-      </div>
     </div>
   </div>
 </body>
