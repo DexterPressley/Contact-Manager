@@ -371,23 +371,36 @@ function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, m=>({ "&":"&a
 function jsStr(s){ return String(s ?? "").replace(/['\\]/g, "\\$&"); }
 
 function deleteContact(first, last) {
-  // Make sure we have a logged-in userId
+  // Must be logged in
   if (!userId || userId < 1) {
     alert("You must be logged in.");
     return;
   }
 
-  // Ask the user to confirm
-  if (!confirm(`Delete contact: ${first} ${last}?`)) return;
+  // Normalize sources: use args if passed (inline table button), else read inputs
+  const f = (first ?? document.getElementById("delFirst")?.value ?? "").trim();
+  const l = (last  ?? document.getElementById("delLast")?.value  ?? "").trim();
+
+  // Require both names before continuing
+  if (!f || !l) {
+    const msgEl = document.getElementById("contactDeleteResult") || document.getElementById("colorSearchResult");
+    if (msgEl) msgEl.textContent = "Please enter both first and last name before deleting.";
+    // Focus the first missing input to help the user
+    if (!f) document.getElementById("delFirst")?.focus();
+    else if (!l) document.getElementById("delLast")?.focus();
+    return;
+  }
+
+  // Confirm
+  if (!confirm(`Delete contact: ${f} ${l}?`)) return;
 
   // Clear any old messages
   const msgEl = document.getElementById("contactDeleteResult") || document.getElementById("colorSearchResult");
   if (msgEl) msgEl.textContent = "";
 
-  // Payload for PHP
-  const tmp = { firstName: first, lastName: last, userId: userId };
+  // Payload
+  const tmp = { firstName: f, lastName: l, userId: userId };
   const jsonPayload = JSON.stringify(tmp);
-
   const url = urlBase + 'DeleteContacts' + extension;
 
   const xhr = new XMLHttpRequest();
@@ -412,13 +425,14 @@ function deleteContact(first, last) {
         // Success
         if (msgEl) msgEl.textContent = "Contact deleted";
 
-        // Clear out the input fields
+        // Clear the manual delete inputs
         const delFirst = document.getElementById("delFirst");
         const delLast = document.getElementById("delLast");
         if (delFirst) delFirst.value = "";
         if (delLast) delLast.value = "";
 
-        const sel = `[data-first="${cssSel(first)}"][data-last="${cssSel(last)}"]`;
+        // Remove the row from search results (if present)
+        const sel = `[data-first="${cssSel(f)}"][data-last="${cssSel(l)}"]`;
         const row = document.querySelector(sel);
         if (row && row.parentNode) row.parentNode.removeChild(row);
       }
