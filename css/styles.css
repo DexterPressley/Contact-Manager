@@ -1,168 +1,295 @@
-body 
-{
-    background-color: #707070;
+/* ============================
+   Base & Theme
+============================ */
+:root{
+  --bg:#f6f7fb;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --brand:#2563eb;
+  --brand-hover:#1e3fae;
+  --danger:#e11d48;
+  --danger-hover:#b31239;
+  --border:#e5e7eb;
+  --radius:14px;
+  --shadow:0 8px 20px rgba(0,0,0,0.06);
+  --font: 'Ubuntu', sans-serif;
 }
 
-#title 
-{
-    font-size: 40px;
-    width: 100%;
-    margin: 2% 5%;
-    text-align: center;
-    font-family: 'Ubuntu', sans-serif;
-    color: #FFFFFF;
+*{ box-sizing:border-box; }
+
+html, body{
+  margin:0;
+  padding:0;
 }
 
-#loginDiv
-{
-    font-size: 30px;
-    width: 70%;
-    margin-left: 15%;
-    padding: 25px;
-    background-color: #b2b2b2;
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
 }
 
-#loggedInDiv
-{
-    font-size: 30px;
-    width: 70%;
-    margin-left: 15%;
-    padding: 25px;
-    background-color: #b2b2b2;
+/* ============================
+   Headings & Containers
+============================ */
+#title{
+  font-size: 40px;
+  text-align: center;
+  margin: 24px 0 8px;
+  color: #111827;
 }
 
-#accessUIDiv
-{
-    font-size: 30px;
-    width: 70%;
-    margin-left: 15%;
-    padding: 25px;
-    background-color: #b2b2b2;
+.container{
+  max-width: 980px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
 }
 
-.buttons
-{
-    font-size: 30px;
-    border-radius: 25px;
-    width: 50%;
-    margin-left: 25%;
-    font-family: 'Ubuntu', sans-serif;
+/* Card layout used on all pages */
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
 }
 
+.card--thin{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.card h3{
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+/* Simple grid for the Contacts page */
+.grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+@media (min-width: 900px){
+  .grid{ grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================
+   Rows & Controls
+============================ */
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+/* Modern input defaults inside cards */
+.card input[type="text"],
+.card input[type="password"],
+.card input[type="email"]{
+  flex: 1 1 220px;
+  width: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Legacy wide inputs (kept for backward compatibility on old pages) */
+input[type="text"], input[type="password"]{
+  border-radius: 25px;
+  text-align: center;
+  width: 80%;
+  margin-left: 10%;
+  margin-bottom: 2%;
+  font-family: var(--font);
+  font-size: 30px; /* matches original scale */
+}
+
+/* Specific legacy IDs still used on some pages */
+#loginName, #loginPassword, #searchText, #colorText{
+  font-size: 30px;
+}
+
+/* Buttons */
+.buttons, .btn{
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--brand);
+  color:#fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .05s ease, background .15s ease, opacity .15s ease;
+}
+
+/* Preserve original hover feel, (modernized) */
+.buttons:hover, .btn:hover{ background: var(--brand-hover); }
+.buttons:active, .btn:active{ transform: translateY(1px); }
+
+/* Old big button layout (legacy pages) */
+.buttons{
+  font-size: 30px;
+  border-radius: 25px;
+  width: 50%;
+  margin-left: 25%;
+  font-family: var(--font);
+}
 .buttons:hover{
-    background-color: #00d5124f;
-    color: #FFFFFF;
-    opacity: 50%;
+  background-color: #00d5124f;
+  color:#FFFFFF;
+  opacity: 50%;
 }
 
-#loginName
-{
-	font-size: 30px;
+/* Variant for destructive actions */
+.btn--danger{
+  background: var(--danger);
 }
-#loginPassword
-{
-	font-size: 30px;
-}
-#searchText
-{
-	font-size: 30px;
-}
-#colorText
-{
-	font-size: 30px;
+.btn--danger:hover{
+  background: var(--danger-hover);
 }
 
-input[type="text"],input[type="password"]{
-    border-radius: 25px;
-    text-align: center;
-    width: 80%;
-    margin-left: 10%;
-    margin-bottom: 2%;
-    font-family: 'Ubuntu', sans-serif;
+/* Logged-in header strip on Contacts */
+#loggedInDiv{
+  font-size: 30px;
+  width: 70%;
+  margin-left: 15%;
+  padding: 25px;
+  background-color: #b2b2b2; /* preserved legacy look */
+  border-radius: 12px;
 }
 
-#inner-title{
-    display: inline-block;
-    font-size: 0.8em;
-    width: 90%;
-    text-align: center;
-    margin-left: 5%;
-    margin-bottom: 2%;
-    font-family: 'Ubuntu', sans-serif;
-    color: #95060a;
-}
-
-#loginResult{
-    display: inline-block;
-    font-size: 0.8em;
-    width: 90%;
-    text-align: center;
-    margin-left: 5%;
-    margin-bottom: 2%;
-    font-family: 'Ubuntu', sans-serif;
-    color: #95060a;
-}
-
-#userName{
-    display: inline-block;
-    width: 80%;
-    margin-left: 10%;
-    text-align: center;
-}
-
+/* Logout button centering in legacy layout */
 #logoutButton{
-    width: 20%;
-    margin-left: 40%;
+  width: 20%;
+  margin-left: 40%;
+}
+
+/* Legacy sections retained */
+#loginDiv, #accessUIDiv{
+  font-size: 30px;
+  width: 70%;
+  margin-left: 15%;
+  padding: 25px;
+  background-color: #b2b2b2;
+  border-radius: 12px;
+}
+
+/* ============================
+   Messages & Helpers
+============================ */
+.msg{
+  display:inline-block;
+  margin-top:6px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Make the search status visible */
+#colorSearchResult{
+  display: inline-block;
+  font-size: 0.9em;
+  width: 90%;
+  text-align: center;
+  margin: 5px auto;
+  color: #95060a; /* matches your other result text */
+}
+
+/* Other legacy result blocks preserved */
+#inner-title{
+  display:inline-block;
+  font-size:0.8em;
+  width:90%;
+  text-align:center;
+  margin-left:5%;
+  margin-bottom:2%;
+  color:#95060a;
+}
+#loginResult, #colorAddResult{
+  display:inline-block;
+  font-size:0.9em;
+  width:90%;
+  text-align:center;
+  margin-left:5%;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  color:#95060a;
+}
+
+/* ============================
+   Table (Contacts results)
+============================ */
+.table{
+  width:100%;
+  border-collapse: collapse;
+  margin-top:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+}
+.table th, .table td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  vertical-align:middle;
+  font-size:14px;
+}
+.table thead th{
+  background:#f3f4f6;
+  font-weight:700;
+}
+.table tbody tr:nth-child(odd){ background:#fafafa; }
+.table tbody tr:hover{ background:#f0f7ff; }
+
+/* ============================
+   Form Validation (matches form-validation.js)
+============================ */
+/* Inline error messages inserted after inputs */
+.error{
+  color:#e74c3c;
+  font-size:0.9em;
+  margin-top:4px;
+  margin-bottom:8px;
+  font-family: var(--font);
+}
+
+/* Red border when invalid */
+input[aria-invalid="true"]{
+  border:2px solid #e74c3c !important;
+  outline:none;
+}
+
+/* Green border when explicitly valid */
+input[aria-invalid="false"]{
+  border:2px solid #2ecc71 !important;
+  outline:none;
+}
+
+/* Neutral default for untouched inputs */
+input:not([aria-invalid]){
+  border:1px solid #ccc;
+}
+
+/* ============================
+   Small tweaks
+============================ */
+#userName{
+  display:inline-block;
+  width:80%;
+  margin-left:10%;
+  text-align:center;
 }
 
 select{
-    width: 30%;
-    margin-left: 35%;
-    margin-top: 2%;
-    font-size: 0.75em;
-    font-family: 'Ubuntu', sans-serif;
-}
-
-#colorSearchResult{
-    display: none;
-}
-
-#colorAddResult{
-    display: inline-block;
-    font-size: 0.8em;
-    width: 90%;
-    text-align: center;
-    margin-left: 5%;
-    margin-top: 2%;
-    margin-bottom: 1%;
-    font-family: 'Ubuntu', sans-serif;
-    color: #95060a;
-}
-
-/* === Form Validation Styles === */
-/* Error message styling */
-.error {
-  color: #e74c3c;           /* red for visibility */
-  font-size: 0.9em;         /* slightly smaller than input text */
-  margin-top: 4px;          /* space under the input */
-  margin-bottom: 8px;       /* consistent spacing */
-  font-family: 'Ubuntu', sans-serif; /* match site font */
-}
-
-/* Highlight invalid inputs with a red border */
-input[aria-invalid="true"] {
-  border: 2px solid #e74c3c;
-  outline: none;
-}
-
-/*  Success state */
-input[aria-invalid="false"] {
-  border: 2px solid #2ecc71;   /* green border */
-  outline: none;
-}
-
-/* Neutral state for untouched inputs */
-input:not([aria-invalid]) {
-  border: 1px solid #ccc;
+  width:30%;
+  margin-left:35%;
+  margin-top:2%;
+  font-size:0.75em;
+  font-family: var(--font);
 }
 

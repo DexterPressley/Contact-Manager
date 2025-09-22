@@ -3,72 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <title>Contact Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script type="text/javascript" src="js/code.js"></script>
   <link href="css/styles.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
 
-  <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
+  <script src="js/code.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
       readCookie();
-    }, false);
+    });
   </script>
 </head>
 <body>
-
   <h1 id="title">Contacts</h1>
 
-  <div id="loggedInDiv">
-    <span id="userName"></span><br />
-    <button type="button" id="logoutButton" class="buttons" onclick="doLogout();">Log Out</button>
-  </div>
+  <div class="container">
+    <div id="loggedInDiv" class="card card--thin" style="margin-bottom:16px;">
+      <span id="userName"></span>
+      <button type="button" id="logoutButton" class="btn" onclick="doLogout();">Log Out</button>
+    </div>
 
-  <div id="accessUIDiv">
-    <br />
+    <div class="grid">
+      <!-- Search -->
+      <div class="card">
+        <h3>Search Contacts</h3>
+        <div class="row">
+          <input type="text" id="searchText" placeholder="Search contacts..." oninput="handleSearchInput()" />
+          <button type="button" id="searchColorButton" class="btn" onclick="searchColor()">Search</button>
+        </div>
+        <span id="colorSearchResult" class="msg"></span>
 
-<!-- Search Contacts -->
-<input type="text" id="searchText" placeholder="Search contacts..." oninput="handleSearchInput()" />
-<button type="button" id="searchColorButton" class="buttons" onclick="searchColor()">Search</button><br />
-<span id="colorSearchResult"></span>
+        <table id="contactsTable" class="table" style="display:none;">
+          <thead>
+            <tr><th>First</th><th>Last</th><th>Phone</th><th>Email</th><th></th></tr>
+          </thead>
+          <tbody id="contactsBody"></tbody>
+        </table>
 
-<table id="contactsTable" style="width:100%; margin-top:10px; display:none;">
-  <thead>
-    <tr><th>First</th><th>Last</th><th>Phone</th><th>Email</th><th></th></tr>
-  </thead>
-  <tbody id="contactsBody"></tbody>
-</table>
+        <!-- Legacy container (hidden) -->
+        <p id="colorList" style="display:none;"></p>
+      </div>
 
-<!-- Legacy container (hidden) -->
-<p id="colorList" style="display:none;"></p>
+      <!-- Add -->
+      <div class="card">
+        <h3>Add Contact</h3>
+        <div class="row">
+          <input type="text" id="colorText" placeholder="Contact To Add" />
+          <button type="button" id="addColorButton" class="btn" onclick="addColor();">Add Contact</button>
+        </div>
+        <span id="colorAddResult" class="msg"></span>
+      </div>
 
-
-    <!-- Add Contact -->
-    <input type="text" id="colorText" placeholder="Contact To Add" />
-    <button type="button" id="addColorButton" class="buttons" onclick="addColor();">Add Contact</button><br />
-    <span id="colorAddResult"></span>
-
-    <br /><br />
-
-    <!-- Delete Contact -->
-    <div id="deleteContactDiv">
-      <h3 style="margin: 1rem 0 0.5rem;">Delete Contact</h3>
-      <input type="text" id="delFirst" placeholder="First Name" />
-      <input type="text" id="delLast" placeholder="Last Name" />
-      <button
-        type="button"
-        id="deleteContactButton"
-        class="buttons"
-        onclick="deleteContact(
-          document.getElementById('delFirst').value.trim(),
-          document.getElementById('delLast').value.trim()
-        );"
-      >
-        Delete
-      </button>
-      <span id="contactDeleteResult"></span>
+      <!-- Delete -->
+      <div class="card">
+        <h3>Delete Contact</h3>
+        <div class="row">
+          <input type="text" id="delFirst" placeholder="First Name" />
+          <input type="text" id="delLast" placeholder="Last Name" />
+          <button
+            type="button"
+            id="deleteContactButton"
+            class="btn btn--danger"
+            onclick="deleteContact(
+              document.getElementById('delFirst').value.trim(),
+              document.getElementById('delLast').value.trim()
+            )"
+          >
+            Delete
+          </button>
+        </div>
+        <span id="contactDeleteResult" class="msg"></span>
+      </div>
     </div>
   </div>
-
 </body>
 </html>
 

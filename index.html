@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Manager</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Contact Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Existing scripts/styles -->
-    <script type="text/javascript" src="js/md5.js"></script>
-    <script type="text/javascript" src="js/code.js"></script>
-    <link href="css/styles.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
-  </head>
-  <body>
-    <h1 id="title">Contact Manager</h1>
+  <link href="css/styles.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
 
-    <div id="loginDiv">
-      <form id="loginForm">
-        <span id="inner-title">Log in</span>
-        <input type="text" id="loginName" placeholder="Username" /><br />
-        <input type="password" id="loginPassword" placeholder="Password" /><br />
-        <button type="submit" id="loginButton" class="buttons">Continue</button>
-        <span id="loginResult"></span>
+  <script src="js/md5.js"></script>
+  <script src="js/code.js"></script>
+  <script src="js/form-validation.js"></script>
+</head>
+<body>
+  <h1 id="title">Contact Manager</h1>
+
+  <div class="container">
+    <div id="loginCard" class="card" style="max-width:560px; margin:0 auto;">
+      <h3>Log In</h3>
+
+      <!-- Validation handles submit and calls doLogin() -->
+      <form id="loginForm" class="row" novalidate>
+        <input type="text" id="loginName" placeholder="Username" />
+        <input type="password" id="loginPassword" placeholder="Password" />
+        <button type="submit" id="loginButton" class="btn">Continue</button>
       </form>
-    </div>
 
-    <div id="signupContainer">
-      <button
-        type="button"
-        id="signupButton"
-        class="buttons"
-        onclick="window.location.href='signup.html'"
-      >
-        Register Here
-      </button>
-    </div>
+      <span id="loginResult" class="msg"></span>
 
-    <!-- Validation script -->
-    <script src="form-validation.js"></script>
-  </body>
+      <div class="row" style="margin-top:14px;">
+        <button type="button" class="btn" onclick="window.location.href='signup.html'">
+          Register Here
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
 

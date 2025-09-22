@@ -2,38 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <script type="text/javascript" src="js/md5.js"></script>
-  <script type="text/javascript" src="js/code.js"></script>
   <link href="css/styles.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
+
+  <script src="js/md5.js"></script>
+  <script src="js/code.js"></script>
+  <script src="js/form-validation.js"></script>
 </head>
 <body>
   <h1 id="title">Contact Manager</h1>
 
-  <div id="signupDiv">
-    <button class="back-btn" onclick="window.location.href='index.html'">Back</button>
-    <h2 style="text-align: center; margin-bottom: 2rem; color: #333;">Create New Account</h2>
+  <div class="container">
+    <div id="signupCard" class="card" style="max-width:640px; margin:0 auto;">
+      <div class="row" style="justify-content:space-between;">
+        <h3 style="margin:0;">Create New Account</h3>
+        <button class="btn" onclick="window.location.href='index.html'">Back</button>
+      </div>
 
-    <form id="signupForm">
-      <input type="text" id="firstName" placeholder="First Name" /><br />
-      <input type="text" id="lastName" placeholder="Last Name" /><br />
+      <!-- Validation handles submit and calls doSignup() -->
+      <form id="signupForm" class="row" novalidate>
+        <input type="text" id="firstName" placeholder="First Name" />
+        <input type="text" id="lastName" placeholder="Last Name" />
+        <input type="text" id="signupUsername" placeholder="Username" />
+        <!-- Frontend validates; backend currently ignores email -->
+        <input type="text" id="signupEmail" placeholder="Email" />
+        <input type="password" id="signupPassword" placeholder="Password" />
+        <input type="password" id="signupConfirm" placeholder="Confirm Password" />
+        <button type="submit" id="signupButton" class="btn">Sign Up</button>
+      </form>
 
-      <!-- IDs below are what the validator expects -->
-      <input type="text" id="signupUsername" placeholder="Username" /><br />
-      <input type="text" id="signupEmail" placeholder="Email" /><br />
-      <input type="password" id="signupPassword" placeholder="Password" /><br />
-      <input type="password" id="signupConfirm" placeholder="Confirm Password" /><br />
-
-      <button type="submit" id="registerButton" class="buttons">Sign Up</button>
-      <span id="signupResult"></span>
-    </form>
+      <span id="signupResult" class="msg"></span>
+    </div>
   </div>
-
-  <!-- Validation script at the end -->
-  <script src="form-validation.js"></script>
 </body>
 </html>
 
