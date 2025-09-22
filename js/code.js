@@ -165,35 +165,72 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
-function addColor()
+
+function addContact()
 {
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
+	let firstName = document.getElementById("addFirst").value;
+    let lastName = document.getElementById("addLast").value;
+    let phone = document.getElementById("addPhone").value;
+    let email = document.getElementById("addEmail").value;
 
-	let tmp = { color: newColor, userId: userId };
-	let jsonPayload = JSON.stringify( tmp );
+    document.getElementById("colorAddResult").innerHTML= "";
 
-	let url = urlBase + 'AddColor' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
+    // validating that at least first and last name exist
+    if (!firstName || !lastName)
+    {
+		document.getElementById("colorAddResult").innerHTML = "Must enter at least a first name and a last name";
+        return;
+    }
+
+    let tmp = { firstName:firstName, lastName:lastName, phone:phone, email:email, userId:userId };
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + 'AddContacts' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try
+    {
+		xhr.onreadystatechange = function()
+        {
+			if (this.readyState == 4 && this.status == 200)
 			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
+				let jsonObject = {};
+				try
+				{
+					jsonObject = JSON.parse(xhr.responseText);
+				}
+				catch (e)
+				{
+					document.getElementById("colorAddResult").innerHTML = "Error parsing response";
+					return;
+				}
+
+				if (jsonObject.error && jsonObject.error.length > 0) {
+					document.getElementById("colorAddResult").innerHTML = jsonObject.error;
+					return;
+				}
+
+                document.getElementById("colorAddResult").innerHTML = "Contact has been added!";
+
+                document.getElementById("addFirst").value = "";
+				document.getElementById("addLast").value = "";
+				document.getElementById("addPhone").value = "";
+				document.getElementById("addEmail").value = "";
+            }
+            else if (this.readyState == 4)
+            {
+				document.getElementById("colorAddResult").innerHTML = "Failed to add contact (HTTP " + this.status + ")";
+            }
+        };
+        xhr.send(jsonPayload);
+    }
+    catch(err)
+    {
 		document.getElementById("colorAddResult").innerHTML = err.message;
-	}
-	
+    }
+
 }
 
 // ===== Debounced type-to-search =====
