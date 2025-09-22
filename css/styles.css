@@ -324,3 +324,115 @@ select{
   background-color: #f3e9cf; /* soft cream tint */
 }
 
+/* ============================
+   Layout fixes for search results & buttons
+============================ */
+
+/* Normalize form rows */
+.card .row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  align-items: center;
+}
+
+/* Consistent label sizing and style */
+.card .row label{
+  flex: 0 0 120px;         /* fixed label column */
+  text-align: left;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Inputs flex nicely next to labels */
+.card .row input[type="text"],
+.card .row input[type="password"],
+.card .row input[type="email"]{
+  flex: 1 1 260px;
+  width: auto;
+  margin: 0;               /* override legacy margins */
+  font-size: 16px;         /* override legacy 30px */
+}
+
+/* Specifically tame the huge legacy font on search */
+.card #searchText{ font-size: 16px; max-width: 520px; }
+
+/* Make the header strip cleaner and keep the button sized right */
+#loggedInDiv{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: auto;          /* override legacy width */
+  margin: 0 auto 16px;  /* center the strip */
+  font-size: 16px;
+  padding: 12px 16px;
+  background-color: #f3e9cf; /* matches new theme */
+}
+
+#logoutButton{
+  width: auto;          /* stop stretching */
+  margin: 0;            /* remove legacy centering */
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+/* Scroll only the results area, not the whole card */
+.table-scroll{
+  max-height: 340px;
+  overflow: auto;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+/* Ensure Delete inputs don’t take legacy 80% width */
+.card #delFirst,
+.card #delLast{
+  width: auto;
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Make grid columns align to the top and keep spacing consistent */
+.grid{
+  align-items: start;
+  gap: 20px;
+}
+
+/* Make table action buttons normal-sized */
+.table .buttons,
+.table td button {
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  width: auto;
+  margin: 0;
+  border-radius: 8px;
+  background: var(--danger);
+  color: #fff;
+}
+.table .buttons:hover,
+.table td button:hover {
+  background: var(--danger-hover);
+}
+
+/* When these inputs are inside modern cards, keep them sane */
+.card #loginName,
+.card #loginPassword,
+.card #searchText,
+.card #colorText {
+  font-size: 16px;      /* override legacy 30px */
+  width: auto;          /* override legacy 80% */
+  margin: 0;            /* kill legacy centering */
+}
+
+@media (max-width: 560px){
+  .card .row label{
+    flex: 1 1 100%;
+  }
+  .card .row input[type="text"],
+  .card .row input[type="password"],
+  .card .row input[type="email"]{
+    flex: 1 1 100%;
+  }
+}
+

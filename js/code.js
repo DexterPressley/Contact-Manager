@@ -360,7 +360,7 @@ function renderSearchResults(entries) {
       <td>${escapeHtml(last)}</td>
       <td>${escapeHtml(phone)}</td>
       <td>${escapeHtml(email)}</td>
-      <td><button class="buttons" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button></td>
+      <td><button class="btn btn--danger" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button></td>
     `;
     body.appendChild(tr);
   });

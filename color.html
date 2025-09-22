@@ -43,13 +43,14 @@
           <button type="button" id="searchColorButton" class="btn" onclick="searchColor()">Search</button>
         </div>
         <span id="colorSearchResult" class="msg" role="status" aria-live="polite"></span>
-
-        <table id="contactsTable" class="table" style="display:none;">
-          <thead>
-            <tr><th>First</th><th>Last</th><th>Phone</th><th>Email</th><th></th></tr>
-          </thead>
-          <tbody id="contactsBody"></tbody>
-        </table>
+	<div class="table-scroll">
+       		<table id="contactsTable" class="table" style="display:none;">
+          		<thead>
+            			<tr><th>First</th><th>Last</th><th>Phone</th><th>Email</th><th></th></tr>
+          		</thead>
+          		<tbody id="contactsBody"></tbody>
+        	</table>
+	</div>
 
         <!-- Legacy container (hidden) -->
         <p id="colorList" style="display:none;"></p>
