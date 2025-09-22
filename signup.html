@@ -22,28 +22,49 @@
         <button class="btn" onclick="window.location.href='index.html'">Back</button>
       </div>
 
-      <form id="signupForm" class="row" novalidate>
-        <label for="firstName">First Name</label>
-        <input type="text" id="firstName" placeholder="First Name" />
+<form id="signupForm" novalidate>
+  <div class="row">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" placeholder="First Name" />
+  </div>
 
-        <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" placeholder="Last Name" />
+  <div class="row">
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" placeholder="Last Name" />
+  </div>
 
-        <label for="signupUsername">Username</label>
-        <input type="text" id="signupUsername" placeholder="Username" />
+  <div class="row">
+    <label for="signupUsername">Username</label>
+    <input type="text" id="signupUsername" placeholder="Username" />
+  </div>
 
-        <label for="signupEmail">Email</label>
-        <input type="text" id="signupEmail" placeholder="Email" aria-describedby="signupEmailHint" />
-        <div id="signupEmailHint" class="visually-hidden">We’ll use this for account recovery.</div>
+  <div class="row">
+    <label for="signupEmail">Email</label>
+    <input
+      type="text"
+      id="signupEmail"
+      placeholder="Email"
+      aria-describedby="signupEmailHint"
+    />
+    <div id="signupEmailHint" class="visually-hidden">
+      We’ll use this for account recovery.
+    </div>
+  </div>
 
-        <label for="signupPassword">Password</label>
-        <input type="password" id="signupPassword" placeholder="Password" />
+  <div class="row">
+    <label for="signupPassword">Password</label>
+    <input type="password" id="signupPassword" placeholder="Password" />
+  </div>
 
-        <label for="signupConfirm">Confirm Password</label>
-        <input type="password" id="signupConfirm" placeholder="Confirm Password" />
+  <div class="row">
+    <label for="signupConfirm">Confirm Password</label>
+    <input type="password" id="signupConfirm" placeholder="Confirm Password" />
+  </div>
 
-        <button type="submit" id="signupButton" class="btn">Sign Up</button>
-      </form>
+  <div class="row">
+    <button type="submit" id="signupButton" class="btn">Sign Up</button>
+  </div>
+</form>
 
       <span id="signupResult" class="msg" role="status" aria-live="polite"></span>
     </div>
