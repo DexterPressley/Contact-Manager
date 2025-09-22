@@ -8,9 +8,10 @@
   <link href="css/styles.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
 
-  <script src="js/md5.js"></script>
-  <script src="js/code.js"></script>
-  <script src="form-validation.js"></script>
+  <!-- Load scripts after parse; correct path for form-validation.js -->
+  <script src="js/md5.js" defer></script>
+  <script src="js/code.js" defer></script>
+  <script src="form-validation.js" defer></script>
 </head>
 <body>
   <h1 id="title">Contact Manager</h1>
@@ -19,14 +20,19 @@
     <div id="loginCard" class="card" style="max-width:560px; margin:0 auto;">
       <h3>Log In</h3>
 
-      <!-- Validation handles submit and calls doLogin() -->
       <form id="loginForm" class="row" novalidate>
-        <input type="text" id="loginName" placeholder="Username" />
-        <input type="password" id="loginPassword" placeholder="Password" />
+        <label for="loginName">Username</label>
+        <input type="text" id="loginName" placeholder="Username" aria-describedby="loginNameHint" />
+        <div id="loginNameHint" class="visually-hidden">Enter your username.</div>
+
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Password" aria-describedby="loginPasswordHint" />
+        <div id="loginPasswordHint" class="visually-hidden">Enter your password.</div>
+
         <button type="submit" id="loginButton" class="btn">Continue</button>
       </form>
 
-      <span id="loginResult" class="msg"></span>
+      <span id="loginResult" class="msg" role="status" aria-live="polite"></span>
 
       <div class="row" style="margin-top:14px;">
         <button type="button" class="btn" onclick="window.location.href='signup.html'">

@@ -8,9 +8,11 @@
   <link href="css/styles.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
 
-  <script src="js/code.js"></script>
+  <!-- Safer load order -->
+  <script src="js/code.js" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // userId is read from cookie; users never type it.
       readCookie();
     });
   </script>
@@ -29,10 +31,18 @@
       <div class="card">
         <h3>Search Contacts</h3>
         <div class="row">
-          <input type="text" id="searchText" placeholder="Search contacts..." oninput="handleSearchInput()" />
+          <label for="searchText">Search</label>
+          <input
+            type="text"
+            id="searchText"
+            placeholder="Search contacts..."
+            oninput="handleSearchInput()"
+            aria-describedby="searchHint"
+          />
+          <div id="searchHint" class="visually-hidden">Type a name, phone, or email.</div>
           <button type="button" id="searchColorButton" class="btn" onclick="searchColor()">Search</button>
         </div>
-        <span id="colorSearchResult" class="msg"></span>
+        <span id="colorSearchResult" class="msg" role="status" aria-live="polite"></span>
 
         <table id="contactsTable" class="table" style="display:none;">
           <thead>
@@ -49,21 +59,36 @@
       <div class="card">
         <h3>Add Contact</h3>
         <div class="row">
+          <label for="addFirst">First Name</label>
           <input type="text" id="addFirst" placeholder="First Name" />
+
+          <label for="addLast">Last Name</label>
           <input type="text" id="addLast" placeholder="Last Name" />
-          <input type="text" id="addPhone" placeholder="Phone #" />
-          <input type="text" id="addEmail" placeholder="Email" />
+
+          <label for="addPhone">Phone #</label>
+          <input type="text" id="addPhone" placeholder="Phone #" aria-describedby="addPhoneHint" />
+          <div id="addPhoneHint" class="visually-hidden">Optional. Example: 555-123-4567.</div>
+
+          <label for="addEmail">Email</label>
+          <input type="text" id="addEmail" placeholder="Email" aria-describedby="addEmailHint" />
+          <div id="addEmailHint" class="visually-hidden">Required. Enter a valid email address.</div>
+
+          <!-- Keeping existing button id; calls addContact() -->
           <button type="button" id="addColorButton" class="btn" onclick="addContact();">Add Contact</button>
         </div>
-        <span id="colorAddResult" class="msg"></span>
+        <span id="colorAddResult" class="msg" role="status" aria-live="polite"></span>
       </div>
 
       <!-- Delete -->
       <div class="card">
         <h3>Delete Contact</h3>
         <div class="row">
+          <label for="delFirst">First Name</label>
           <input type="text" id="delFirst" placeholder="First Name" />
+
+          <label for="delLast">Last Name</label>
           <input type="text" id="delLast" placeholder="Last Name" />
+
           <button
             type="button"
             id="deleteContactButton"
@@ -76,7 +101,7 @@
             Delete
           </button>
         </div>
-        <span id="contactDeleteResult" class="msg"></span>
+        <span id="contactDeleteResult" class="msg" role="status" aria-live="polite"></span>
       </div>
     </div>
   </div>

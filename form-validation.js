@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
   }
 
-  function clearErrors(form) {
-    if (!form) return;
-    form.querySelectorAll(".error").forEach((el) => (el.textContent = ""));
-    form
+  function clearErrors(rootEl) {
+    if (!rootEl) return;
+    rootEl.querySelectorAll(".error").forEach((el) => (el.textContent = ""));
+    rootEl
       .querySelectorAll("[aria-invalid='true']")
       .forEach((el) => el.setAttribute("aria-invalid", "false"));
   }
@@ -56,11 +56,15 @@ document.addEventListener("DOMContentLoaded", () => {
         valid = false;
       }
 
-      if (!valid) {
-        e.preventDefault();
+      e.preventDefault();
+      if (!valid) return;
+
+      if (typeof window.doLogin === "function") {
+        window.doLogin();
       } else {
-        e.preventDefault(); // stop default submit
-        doLogin();          // call existing login function
+        const msg = document.getElementById("loginResult");
+        if (msg) msg.textContent = "Login function is unavailable.";
+        console.error("doLogin is not defined");
       }
     });
   }
@@ -71,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const suFirst = document.getElementById("firstName");
     const suLast = document.getElementById("lastName");
     const suName = document.getElementById("signupUsername");
-    const suEmail = document.getElementById("signupEmail"); // type="text" in HTML
+    const suEmail = document.getElementById("signupEmail");
     const suPass = document.getElementById("signupPassword");
     const suConfirm = document.getElementById("signupConfirm");
 
@@ -119,11 +123,67 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      if (!valid) {
-        e.preventDefault();
+      e.preventDefault();
+      if (!valid) return;
+
+      if (typeof window.doSignup === "function") {
+        window.doSignup();
       } else {
-        e.preventDefault(); // stop default submit
-        doSignup();         // call existing signup function
+        const msg = document.getElementById("signupResult");
+        if (msg) msg.textContent = "Signup function is unavailable.";
+        console.error("doSignup is not defined");
+      }
+    });
+  }
+
+  // ---------- ADD CONTACT (color.html — no <form>, button id addColorButton) ----------
+  const addBtn = document.getElementById("addColorButton");
+  if (addBtn) {
+    // Validate within the containing card
+    const errorRoot = addBtn.closest(".card") || document;
+
+    const addFirst = document.getElementById("addFirst");
+    const addLast  = document.getElementById("addLast");
+    const addPhone = document.getElementById("addPhone");
+    const addEmail = document.getElementById("addEmail");
+    const msgEl    = document.getElementById("colorAddResult");
+
+    [addFirst, addLast, addPhone, addEmail].forEach(attachLiveClear);
+
+    // Prevent double calls if inline onclick exists in HTML
+    try { addBtn.removeAttribute("onclick"); } catch (_) {}
+
+    addBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      clearErrors(errorRoot);
+
+      let valid = true;
+
+      if (!addFirst || addFirst.value.trim() === "") {
+        showError(addFirst, "First name is required");
+        valid = false;
+      }
+      if (!addLast || addLast.value.trim() === "") {
+        showError(addLast, "Last name is required");
+        valid = false;
+      }
+
+      const emailVal = (addEmail && addEmail.value ? addEmail.value.trim() : "");
+      if (!addEmail || emailVal === "") {
+        showError(addEmail, "Email is required");
+        valid = false;
+      } else if (!isEmail(emailVal)) {
+        showError(addEmail, "Invalid email format");
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      if (typeof window.addContact === "function") {
+        window.addContact();
+      } else {
+        if (msgEl) msgEl.textContent = "Add Contact function is unavailable.";
+        console.error("addContact is not defined");
       }
     });
   }

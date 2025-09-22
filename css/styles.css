@@ -2,18 +2,19 @@
    Base & Theme
 ============================ */
 :root{
-  --bg:#f6f7fb;
-  --card:#ffffff;
-  --text:#111827;
-  --muted:#6b7280;
-  --brand:#2563eb;
-  --brand-hover:#1e3fae;
-  --danger:#e11d48;
-  --danger-hover:#b31239;
-  --border:#e5e7eb;
-  --radius:14px;
-  --shadow:0 8px 20px rgba(0,0,0,0.06);
-  --font: 'Ubuntu', sans-serif;
+  /* New palette */
+  --bg:            #fffdd0;   /* cream */
+  --card:          #ffffff;
+  --text:          #38271c;   /* primary text */
+  --muted:         #6f4e37;   /* secondary text / accent */
+  --brand:         #6f4e37;   /* button & links base */
+  --brand-hover:   #5b3f2d;   /* darker hover */
+  --danger:        #e11d48;
+  --danger-hover:  #b31239;
+  --border:        #e0d8b8;   /* softer border for cream bg */
+  --radius:        14px;
+  --shadow:        0 8px 20px rgba(0,0,0,0.06);
+  --font:          'Ubuntu', sans-serif;
 }
 
 *{ box-sizing:border-box; }
@@ -221,6 +222,16 @@ input[type="text"], input[type="password"]{
   color:#95060a;
 }
 
+/* Screen-reader only utility */
+.visually-hidden{
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+
 /* ============================
    Table (Contacts results)
 ============================ */
@@ -291,5 +302,25 @@ select{
   margin-top:2%;
   font-size:0.75em;
   font-family: var(--font);
+}
+
+/* ============================
+   Optional Theme Touches
+============================ */
+#title{ color: var(--text); }
+
+.msg{ color: var(--muted); }
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.table thead th{ background:#f7f1d8; }
+.table tbody tr:nth-child(odd){ background:#fbf7e6; }
+.table tbody tr:hover{ background:#f3e9cf; }
+
+#loggedInDiv{
+  background-color: #f3e9cf; /* soft cream tint */
 }
 
