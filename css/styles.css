@@ -17,17 +17,9 @@
   --font:          'Ubuntu', sans-serif;
 }
 
-*{ box-sizing:border-box; }
-
-html, body{
-  margin:0;
-  padding:0;
-}
-
-body{
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
+/* Global box-sizing reset */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 /* ============================
@@ -541,4 +533,29 @@ select{
 
 /* Keep the top-right “Back” button compact */
 #signupCard .row .btn{ padding: 6px 12px; font-size: 14px; }
+
+/* ============================
+   Page background image
+   - full viewport, fixed, with a soft cream overlay for readability
+============================ */
+html, body {
+  height: 100%;
+}
+
+body{
+  /* soft cream overlay on top of the photo */
+  background:
+    linear-gradient(rgba(255, 253, 208, 0.86), rgba(255, 253, 208, 0.86)),
+    url('../images/background.jpg') center center / cover fixed no-repeat;
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;            /* prevents the black band on tall screens */
+}
+
+/* Keep cards readable over the image */
+.card{
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  backdrop-filter: saturate(110%) blur(1px);
+}
 
