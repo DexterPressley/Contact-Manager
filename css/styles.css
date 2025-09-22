@@ -520,3 +520,25 @@ select{
 /* keep the top right "Back" button consistent */
 #signupCard .row .btn { padding: 6px 12px; font-size: 14px; }
 
+/* Signup form: align like login and place errors under inputs */
+#signupForm .row{
+  display: grid;
+  grid-template-columns: 120px 1fr;  /* label | input */
+  gap: 6px 14px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+#signupForm .row label{ grid-column: 1; }
+#signupForm .row input{ grid-column: 2; }
+#signupForm .row .error{
+  grid-column: 2;       /* stack under the input */
+  margin-top: 4px;
+}
+
+/* Full-width primary button to match login */
+#signupButton{
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
