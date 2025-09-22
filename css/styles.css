@@ -489,3 +489,22 @@ select{
   border-radius: 8px;
 }
 
+/* ============================
+   Login form layout polish
+============================ */
+#loginForm .row {
+  margin-bottom: 12px;   /* consistent spacing between rows */
+}
+
+#loginButton {
+  width: 100%;           /* full width under inputs */
+  padding: 10px;
+  font-size: 16px;
+}
+
+#loginCard .row:last-of-type .btn {
+  width: 100%;           /* full width for Register button too */
+  padding: 10px;
+  font-size: 16px;
+}
+

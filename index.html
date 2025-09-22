@@ -20,17 +20,33 @@
     <div id="loginCard" class="card" style="max-width:560px; margin:0 auto;">
       <h3>Log In</h3>
 
-      <form id="loginForm" class="row" novalidate>
-        <label for="loginName">Username</label>
-        <input type="text" id="loginName" placeholder="Username" aria-describedby="loginNameHint" />
-        <div id="loginNameHint" class="visually-hidden">Enter your username.</div>
+<form id="loginForm" novalidate>
+  <div class="row">
+    <label for="loginName">Username</label>
+    <input
+      type="text"
+      id="loginName"
+      placeholder="Username"
+      aria-describedby="loginNameHint"
+    />
+    <div id="loginNameHint" class="visually-hidden">Enter your username.</div>
+  </div>
 
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" placeholder="Password" aria-describedby="loginPasswordHint" />
-        <div id="loginPasswordHint" class="visually-hidden">Enter your password.</div>
+  <div class="row">
+    <label for="loginPassword">Password</label>
+    <input
+      type="password"
+      id="loginPassword"
+      placeholder="Password"
+      aria-describedby="loginPasswordHint"
+    />
+    <div id="loginPasswordHint" class="visually-hidden">Enter your password.</div>
+  </div>
 
-        <button type="submit" id="loginButton" class="btn">Continue</button>
-      </form>
+  <div class="row">
+    <button type="submit" id="loginButton" class="btn">Continue</button>
+  </div>
+</form>
 
       <span id="loginResult" class="msg" role="status" aria-live="polite"></span>
 
