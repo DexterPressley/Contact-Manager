@@ -551,6 +551,24 @@ function deleteContact(first, last) {
   if (!confirm(`Delete contact: ${f} ${l}?`)) return;
 
   const msgEl = document.getElementById("contactDeleteResult") || document.getElementById("colorSearchResult");
+
+  // helper to set message and optionally auto-clear after 2.5s
+  function _setDelMsg(msg, autoClear = false) {
+    if (!msgEl) return;
+    // cancel any previous timer
+    if (window._deleteMsgTimer) {
+      try { clearTimeout(window._deleteMsgTimer); } catch (_) {}
+      window._deleteMsgTimer = null;
+    }
+    msgEl.textContent = msg || "";
+    if (autoClear) {
+      window._deleteMsgTimer = setTimeout(() => {
+        if (msgEl) msgEl.textContent = "";
+        window._deleteMsgTimer = null;
+      }, 2500);
+    }
+  }
+
   if (msgEl) msgEl.textContent = "";
 
   const tmp = { firstName: f, lastName: l, userId: userId };
@@ -567,16 +585,17 @@ function deleteContact(first, last) {
         try { out = JSON.parse(xhr.responseText); } catch (e) {}
 
         if (this.status !== 200) {
-          if (msgEl) msgEl.textContent = "Delete failed: HTTP " + this.status;
+          _setDelMsg("Delete failed: HTTP " + this.status, false); // keep visible
           return;
         }
 
         if (out.error && out.error.length) {
-          if (msgEl) msgEl.textContent = "Delete failed: " + out.error;
+          _setDelMsg("Delete failed: " + out.error, false); // keep visible
           return;
         }
 
-        if (msgEl) msgEl.textContent = "Contact deleted";
+        // Success
+        _setDelMsg("Contact deleted", true); // auto-clear after 2.5s
 
         // Clear manual delete inputs
         const delFirst = document.getElementById("delFirst");
@@ -592,7 +611,7 @@ function deleteContact(first, last) {
     };
     xhr.send(jsonPayload);
   } catch (err) {
-    if (msgEl) msgEl.textContent = "Network error: " + err.message;
+    _setDelMsg("Network error: " + err.message, false); // keep visible
   }
 }
 
