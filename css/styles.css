@@ -314,12 +314,13 @@ body.contacts #addPhone {
 }
 
 body.contacts #addEmail {
-  max-width: 360px;
+  flex: 1 1 auto;
+  max-width: none;
 }
 
-body.contacts #addEmail {
-  display: block;
-  margin: 0 auto;       /* centers horizontally */
+body.contacts #addColorButton {
+  margin-left: 10px;
+  flex: 0 0 auto;
 }
 
 /* ============================
