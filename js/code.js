@@ -5,7 +5,7 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
-// Simple email check for addContact()
+// Simple email check for add/edit
 function _isEmail(str) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(str || "").trim());
 }
@@ -23,7 +23,7 @@ function doLogin()
   document.getElementById("loginResult").innerHTML = "";
 
   let tmp = { login: login, password: password };
-  // var tmp = {login:login,password:hash};
+  // let tmp = {login:login,password:hash};
   let jsonPayload = JSON.stringify(tmp);
 
   let url = urlBase + 'Login' + extension;
@@ -58,7 +58,6 @@ function doLogin()
 
 function doSignup()
 {
-  // Grab fields (HTML IDs updated to match new signup.html)
   let firstName = document.getElementById("firstName").value;
   let lastName = document.getElementById("lastName").value;
   let login = document.getElementById("signupUsername").value;
@@ -67,16 +66,13 @@ function doSignup()
 
   document.getElementById("signupResult").innerHTML = "";
 
-  // Double-check
   if (password !== confirmPassword) {
     document.getElementById("signupResult").innerHTML = "Passwords do not match";
     return;
   }
 
-  // Build payload that Register.php expects
-  let tmp = { firstName: firstName, lastName: lastName, login: login, password: password };
+  let tmp = { firstName, lastName, login, password };
   let jsonPayload = JSON.stringify(tmp);
-
   let url = urlBase + 'Register' + extension;
 
   let xhr = new XMLHttpRequest();
@@ -85,7 +81,6 @@ function doSignup()
   try {
     xhr.onreadystatechange = function() {
       if (this.readyState === 4) {
-        // Network OK?
         if (this.status !== 200) {
           document.getElementById("signupResult").innerHTML = "Signup failed (HTTP " + this.status + ")";
           return;
@@ -99,7 +94,6 @@ function doSignup()
           return;
         }
 
-        // Success: since Register.php doesn't return id/first/last, just move to login
         document.getElementById("signupResult").innerHTML = "Account created successfully!";
         window.location.href = "index.html";
       }
@@ -140,7 +134,6 @@ function readCookie()
   if (userId < 0) {
     window.location.href = "index.html";
   } else {
-    // Optionally show name:
     // const u = document.getElementById("userName");
     // if (u) u.textContent = "Logged in as " + firstName + " " + lastName;
   }
@@ -169,13 +162,11 @@ function addContact()
   const msgEl = document.getElementById("colorAddResult");
   if (msgEl) msgEl.textContent = "";
 
-  // Must be logged in
   if (!userId || userId < 1) {
     if (msgEl) msgEl.textContent = "Please log in.";
     return;
   }
 
-  // Basic validation
   if (!firstName || !lastName) {
     if (msgEl) msgEl.textContent = "Must enter at least a first name and a last name";
     return;
@@ -240,24 +231,17 @@ let _inflightSearchXhr = null;
 function handleSearchInput() {
   if (_searchTimer) clearTimeout(_searchTimer);
   _searchTimer = setTimeout(() => {
-    const q = document.getElementById("searchText").value.trim();
-    if (q.length === 0) {
-      setSearchMessage("");
-      clearSearchResults();  // hides table + clears body
-      return; // don't auto-load all contacts
-    }
-    searchContacts(q); // still call backend, filtering happens in renderSearchResults
-  }, 250); // slight delay feels snappy
+    let q = document.getElementById("searchText").value.trim();
+    // blank or "*" => fetch ALL from backend
+    if (q.length === 0) q = "*";
+    searchContacts(q);
+  }, 250);
 }
 
-// Keep existing search contact button working
+// Button version
 function searchColor() {
-  const q = document.getElementById("searchText").value.trim();
-  if (q.length === 0) {
-    setSearchMessage("Type something to search.");
-    clearSearchResults();
-    return;
-  }
+  let q = document.getElementById("searchText").value.trim();
+  if (q.length === 0) q = "*";
   searchContacts(q);
 }
 
@@ -284,13 +268,12 @@ function searchContacts(query) {
 
   setSearchMessage("Searching...");
 
-  // Abort previous request to avoid races
   if (_inflightSearchXhr) {
     try { _inflightSearchXhr.abort(); } catch (_) {}
   }
 
   const payload = JSON.stringify({ search: query, userId: userId });
-  const url = urlBase + 'SearchContacts' + extension; // matches PHP
+  const url = urlBase + 'SearchContacts' + extension;
 
   const xhr = new XMLHttpRequest();
   _inflightSearchXhr = xhr;
@@ -299,7 +282,7 @@ function searchContacts(query) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState !== 4) return;
 
-    if (_inflightSearchXhr !== xhr) return; // ignore stale response
+    if (_inflightSearchXhr !== xhr) return;
     _inflightSearchXhr = null;
 
     if (xhr.status !== 200) {
@@ -312,7 +295,7 @@ function searchContacts(query) {
     try { out = JSON.parse(xhr.responseText); } catch (_) {}
 
     if (out.error && out.error.length) {
-      setSearchMessage(out.error); // No Contacts Found
+      setSearchMessage(out.error); // e.g., "No Contacts Found"
       clearSearchResults();
       return;
     }
@@ -325,7 +308,7 @@ function searchContacts(query) {
   xhr.send(payload);
 }
 
-// Render rows with Delete buttons
+// Render rows with Edit + Delete buttons
 function renderSearchResults(entries) {
   const body = document.getElementById("contactsBody");
   const p    = document.getElementById("colorList");
@@ -334,36 +317,169 @@ function renderSearchResults(entries) {
   if (body) body.innerHTML = "";
   if (p) p.innerHTML = "";
 
-  // Filter: FirstName starts with the query (case-insensitive)
-  const q = (document.getElementById("searchText").value || "").trim().toLowerCase();
-  const filtered = entries.filter(e => (e.FirstName || "").toLowerCase().startsWith(q));
-
-  // Toggle table visibility based on results
-  if (!filtered.length) {
+  if (!entries.length) {
     if (tbl) tbl.style.display = "none";
     return;
   } else {
     if (tbl) tbl.style.display = "table";
   }
 
-  filtered.forEach((item) => {
+  entries.forEach((item) => {
+    const id    = item.ID;
     const first = item.FirstName || "";
-    const last  = item.LastName  || "";
+    theLast     = item.LastName  || "";
     const phone = item.Phone     || "";
     const email = item.Email     || "";
 
     const tr = document.createElement("tr");
+    tr.setAttribute("data-id", id);
     tr.setAttribute("data-first", first);
-    tr.setAttribute("data-last",  last);
-    tr.innerHTML = `
-      <td>${escapeHtml(first)}</td>
-      <td>${escapeHtml(last)}</td>
-      <td>${escapeHtml(phone)}</td>
-      <td>${escapeHtml(email)}</td>
-      <td><button class="btn btn--danger" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">Delete</button></td>
+    tr.setAttribute("data-last",  theLast);
+
+    const cFirst = document.createElement("td");
+    cFirst.textContent = first;
+
+    const cLast = document.createElement("td");
+    cLast.textContent = theLast;
+
+    const cPhone = document.createElement("td");
+    cPhone.textContent = phone;
+
+    const cEmail = document.createElement("td");
+    cEmail.textContent = email;
+
+    const cActions = document.createElement("td");
+    cActions.innerHTML = `
+      <button class="btn" onclick="enterEditMode(this)">✏️ Edit</button>
+      <button class="btn btn--danger" onclick="deleteContact('${jsStr(first)}','${jsStr(theLast)}')">🗑️ Delete</button>
     `;
+
+    tr.appendChild(cFirst);
+    tr.appendChild(cLast);
+    tr.appendChild(cPhone);
+    tr.appendChild(cEmail);
+    tr.appendChild(cActions);
     body.appendChild(tr);
   });
+}
+
+// ----- Inline Edit Handlers -----
+function enterEditMode(btn){
+  const tr = btn.closest('tr');
+  if (!tr) return;
+
+  // if already editing, bail
+  if (tr.dataset.editing === "1") return;
+  tr.dataset.editing = "1";
+
+  // stash originals
+  tr.dataset.origFirst = tr.children[0].textContent.trim();
+  tr.dataset.origLast  = tr.children[1].textContent.trim();
+  tr.dataset.origPhone = tr.children[2].textContent.trim();
+  tr.dataset.origEmail = tr.children[3].textContent.trim();
+
+  // swap cells to inputs
+  tr.children[0].innerHTML = `<input class="inline-input" type="text" value="${escapeHtml(tr.dataset.origFirst)}" />`;
+  tr.children[1].innerHTML = `<input class="inline-input" type="text" value="${escapeHtml(tr.dataset.origLast)}" />`;
+  tr.children[2].innerHTML = `<input class="inline-input" type="text" value="${escapeHtml(tr.dataset.origPhone)}" />`;
+  tr.children[3].innerHTML = `<input class="inline-input" type="text" value="${escapeHtml(tr.dataset.origEmail)}" />`;
+
+  // actions: Save/Cancel
+  tr.children[4].innerHTML = `
+    <button class="btn" onclick="saveEdit(this)">💾 Save</button>
+    <button class="btn btn--danger" onclick="cancelEdit(this)">✖ Cancel</button>
+  `;
+}
+
+function cancelEdit(btn){
+  const tr = btn.closest('tr');
+  if (!tr) return;
+
+  tr.children[0].textContent = tr.dataset.origFirst || "";
+  tr.children[1].textContent = tr.dataset.origLast  || "";
+  tr.children[2].textContent = tr.dataset.origPhone || "";
+  tr.children[3].textContent = tr.dataset.origEmail || "";
+
+  tr.children[4].innerHTML = `
+    <button class="btn" onclick="enterEditMode(this)">✏️ Edit</button>
+    <button class="btn btn--danger" onclick="deleteContact('${jsStr(tr.dataset.origFirst || "")}','${jsStr(tr.dataset.origLast || "")}')">🗑️ Delete</button>
+  `;
+
+  tr.dataset.editing = "0";
+}
+
+function saveEdit(btn){
+  const tr = btn.closest('tr');
+  if (!tr) return;
+
+  const id = parseInt(tr.getAttribute('data-id'), 10);
+  if (!Number.isInteger(id)) {
+    alert("Missing contact ID; cannot save.");
+    return;
+  }
+
+  const inputs = tr.querySelectorAll('input.inline-input');
+  const first = (inputs[0]?.value || "").trim();
+  const last  = (inputs[1]?.value || "").trim();
+  const phone = (inputs[2]?.value || "").trim();
+  const email = (inputs[3]?.value || "").trim();
+
+  // validate: require first/last; email if provided must be valid
+  if (!first || !last) {
+    alert("First and Last name are required.");
+    return;
+  }
+  if (email && !_isEmail(email)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
+  const payload = JSON.stringify({
+    firstName: first,
+    lastName:  last,
+    phone:     phone,
+    email:     email,
+    Id:        id
+  });
+
+  const url = urlBase + 'EditContacts' + extension;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  xhr.onreadystatechange = function(){
+    if (xhr.readyState !== 4) return;
+
+    if (xhr.status !== 200) {
+      alert("Save failed (HTTP " + xhr.status + ")");
+      return;
+    }
+
+    let out = {};
+    try { out = JSON.parse(xhr.responseText); } catch (_) {}
+
+    if (out.error && out.error.length) {
+      alert("Save failed: " + out.error);
+      return;
+    }
+
+    // success: update row + actions back to Edit/Delete
+    tr.children[0].textContent = first;
+    tr.children[1].textContent = last;
+    tr.children[2].textContent = phone;
+    tr.children[3].textContent = email;
+
+    tr.setAttribute('data-first', first);
+    tr.setAttribute('data-last', last);
+
+    tr.children[4].innerHTML = `
+      <button class="btn" onclick="enterEditMode(this)">✏️ Edit</button>
+      <button class="btn btn--danger" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">🗑️ Delete</button>
+    `;
+
+    tr.dataset.editing = "0";
+  };
+  xhr.send(payload);
 }
 
 // Helpers
@@ -377,7 +493,7 @@ function deleteContact(first, last) {
     return;
   }
 
-  // Normalize sources: use args if passed (inline table button), else read inputs
+  // Normalize sources: args from inline OR the manual inputs
   const f = (first ?? document.getElementById("delFirst")?.value ?? "").trim();
   const l = (last  ?? document.getElementById("delLast")?.value  ?? "").trim();
 
@@ -385,20 +501,16 @@ function deleteContact(first, last) {
   if (!f || !l) {
     const msgEl = document.getElementById("contactDeleteResult") || document.getElementById("colorSearchResult");
     if (msgEl) msgEl.textContent = "Please enter both first and last name before deleting.";
-    // Focus the first missing input to help the user
     if (!f) document.getElementById("delFirst")?.focus();
     else if (!l) document.getElementById("delLast")?.focus();
     return;
   }
 
-  // Confirm
   if (!confirm(`Delete contact: ${f} ${l}?`)) return;
 
-  // Clear any old messages
   const msgEl = document.getElementById("contactDeleteResult") || document.getElementById("colorSearchResult");
   if (msgEl) msgEl.textContent = "";
 
-  // Payload
   const tmp = { firstName: f, lastName: l, userId: userId };
   const jsonPayload = JSON.stringify(tmp);
   const url = urlBase + 'DeleteContacts' + extension;
@@ -422,16 +534,15 @@ function deleteContact(first, last) {
           return;
         }
 
-        // Success
         if (msgEl) msgEl.textContent = "Contact deleted";
 
-        // Clear the manual delete inputs
+        // Clear manual delete inputs
         const delFirst = document.getElementById("delFirst");
         const delLast = document.getElementById("delLast");
         if (delFirst) delFirst.value = "";
         if (delLast) delLast.value = "";
 
-        // Remove the row from search results (if present)
+        // Remove row from search results if present
         const sel = `[data-first="${cssSel(f)}"][data-last="${cssSel(l)}"]`;
         const row = document.querySelector(sel);
         if (row && row.parentNode) row.parentNode.removeChild(row);

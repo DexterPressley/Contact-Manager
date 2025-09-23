@@ -559,3 +559,12 @@ body{
   backdrop-filter: saturate(110%) blur(1px);
 }
 
+/* Inputs inside table during inline edit */
+.inline-input{
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+
