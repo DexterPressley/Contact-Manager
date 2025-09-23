@@ -568,3 +568,5 @@ body{
   font-size: 14px;
 }
 
+.msg:empty { display:none; }
+

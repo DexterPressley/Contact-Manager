@@ -21,14 +21,14 @@
   <h1 id="title">Contacts</h1>
 
   <div class="container">
-<div id="loggedInDiv" class="card card--thin">
-  <span id="welcomeMsg">Welcome, Barista!</span>
-  <button type="button" id="logoutButton" class="btn btn--danger" onclick="doLogout();">Log Out</button>
-</div>
+    <div id="loggedInDiv" class="card card--thin">
+      <span id="welcomeMsg">Welcome, Barista!</span>
+      <button type="button" id="logoutButton" class="btn btn--danger" onclick="doLogout();">Log Out</button>
+    </div>
 
     <div class="grid">
-      <!-- Search -->
-      <div class="card">
+      <!-- Search (full width) -->
+      <div class="card" style="grid-column: 1 / -1;">
         <h3>Search Contacts</h3>
         <div class="row">
           <label for="searchText">Search</label>
@@ -42,22 +42,30 @@
           <div id="searchHint" class="visually-hidden">Type a name, phone, or email.</div>
           <button type="button" id="searchColorButton" class="btn" onclick="searchColor()">Search</button>
         </div>
+
         <span id="colorSearchResult" class="msg" role="status" aria-live="polite"></span>
-	<div class="table-scroll">
-       		<table id="contactsTable" class="table" style="display:none;">
-          		<thead>
-            			<tr><th>First</th><th>Last</th><th>Phone</th><th>Email</th><th></th></tr>
-          		</thead>
-          		<tbody id="contactsBody"></tbody>
-        	</table>
-	</div>
+
+        <div class="table-scroll">
+          <table id="contactsTable" class="table" style="display:none;">
+            <thead>
+              <tr>
+                <th>First</th>
+                <th>Last</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="contactsBody"></tbody>
+          </table>
+        </div>
 
         <!-- Legacy container (hidden) -->
         <p id="colorList" style="display:none;"></p>
       </div>
 
-      <!-- Add -->
-      <div class="card">
+      <!-- Add Contact (full width, now below Search) -->
+      <div class="card" style="grid-column: 1 / -1;">
         <h3>Add Contact</h3>
         <div class="row">
           <label for="addFirst">First Name</label>
@@ -80,34 +88,7 @@
         <span id="colorAddResult" class="msg" role="status" aria-live="polite"></span>
       </div>
 
-      <!-- Delete -->
-<div class="card">
-  <h3>Delete Contact</h3>
-  <div class="row">
-    <label for="delFirst">First Name</label>
-    <input type="text" id="delFirst" placeholder="First Name" />
-  </div>
-  <div class="row">
-    <label for="delLast">Last Name</label>
-    <input type="text" id="delLast" placeholder="Last Name" />
-  </div>
-  <div class="row">
-    <button
-      type="button"
-      id="deleteContactButton"
-      class="btn btn--danger"
-      onclick="deleteContact(
-        document.getElementById('delFirst').value.trim(),
-        document.getElementById('delLast').value.trim()
-      )"
-    >
-      Delete
-    </button>
-  </div>
-  <span id="contactDeleteResult" class="msg" role="status" aria-live="polite"></span>
-</div>
-	
-
+      <!-- Delete card removed (inline delete happens in the Search results table) -->
     </div>
   </div>
 </body>

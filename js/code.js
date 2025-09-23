@@ -205,6 +205,9 @@ function addContact()
         }
 
         if (msgEl) msgEl.textContent = "Contact has been added!";
+	// auto-clear add message
+	if (msgEl) setTimeout(() => { msgEl.textContent = ""; }, 2500);
+
 
         // Clear inputs
         const f = document.getElementById("addFirst");
@@ -230,10 +233,22 @@ let _inflightSearchXhr = null;
 // Called on input change
 function handleSearchInput() {
   if (_searchTimer) clearTimeout(_searchTimer);
+
   _searchTimer = setTimeout(() => {
-    let q = document.getElementById("searchText").value.trim();
-    // blank or "*" => fetch ALL from backend
-    if (q.length === 0) q = "*";
+    const q = document.getElementById("searchText").value.trim();
+
+    // If cleared: abort the current request, wipe UI & message
+    if (q.length === 0) {
+      if (_inflightSearchXhr) {
+        try { _inflightSearchXhr.abort(); } catch (_) {}
+        _inflightSearchXhr = null;
+      }
+      setSearchMessage("");
+      clearSearchResults();
+      return;
+    }
+
+    // otherwise search
     searchContacts(q);
   }, 250);
 }
@@ -257,6 +272,7 @@ function clearSearchResults() {
   if (body) body.innerHTML = "";
   if (p) p.innerHTML = "";
   if (tbl) tbl.style.display = "none";
+  setSearchMessage(""); // <-- add this line
 }
 
 // Core search calling backend (SearchContacts.php)
