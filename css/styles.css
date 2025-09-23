@@ -249,6 +249,60 @@ input[type="text"], input[type="password"]{
 .table tbody tr:nth-child(odd){ background:#fafafa; }
 .table tbody tr:hover{ background:#f0f7ff; }
 
+/* Keep columns aligned even in edit mode */
+.table {
+  table-layout: fixed;            /* prevents columns from resizing on edit */
+}
+
+/* Column widths */
+.table thead th:nth-child(1),
+.table tbody td:nth-child(1) { width: 16%; }  /* First */
+.table thead th:nth-child(2),
+.table tbody td:nth-child(2) { width: 16%; }  /* Last */
+.table thead th:nth-child(3),
+.table tbody td:nth-child(3) { width: 18%; }  /* Phone */
+.table thead th:nth-child(4),
+.table tbody td:nth-child(4) { width: 34%; }  /* Email (wider) */
+.table thead th:nth-child(5),
+.table tbody td:nth-child(5) { width: 16%; }  /* Actions */
+
+/* Prevent overflow jitter; ellipsize long text */
+.table td, .table th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inputs inside edit mode: fit the cell neatly */
+.inline-input {
+  width: 100%;
+  min-width: 0;                   /* allow shrinking inside fixed cells */
+  box-sizing: border-box;
+  height: 32px;
+  padding: 6px 8px;
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(0,0,0,0.12);   /* subtle contrast on dark row */
+  color: var(--text);
+}
+
+/* Keep the action column visible while horizontally scrolling */
+.table-scroll { position: relative; overflow: auto; }
+.table thead th:nth-child(5),
+.table tbody td:nth-child(5) {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background: rgba(0,0,0,0.08);   /* match your dark row bg tint */
+  backdrop-filter: saturate(110%) blur(1px);
+  border-left: 1px solid var(--border);
+}
+
+/* When editing, keep row height tidy */
+.table tbody tr[data-editing="1"] td { padding-top: 8px; padding-bottom: 8px; }
+
+
 /* ============================
    Form Validation (matches form-validation.js)
 ============================ */

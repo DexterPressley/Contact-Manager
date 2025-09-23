@@ -396,7 +396,7 @@ function renderSearchResults(entries) {
   entries.forEach((item) => {
     const id    = item.ID;
     const first = item.FirstName || "";
-    theLast     = item.LastName  || "";
+    const theLast     = item.LastName  || "";
     const phone = item.Phone     || "";
     const email = item.Email     || "";
 
@@ -555,7 +555,7 @@ function saveEdit(btn){
 function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[m])); }
 function jsStr(s){ return String(s ?? "").replace(/['\\]/g, "\\$&"); }
 
-function deleteContact(first, last) {
+function deleteContact(first, last, skipConfirm = false) {
   // Must be logged in
   if (!userId || userId < 1) {
     alert("You must be logged in.");
@@ -575,7 +575,10 @@ function deleteContact(first, last) {
     return;
   }
 
-  if (!confirm(`Delete contact: ${f} ${l}?`)) return;
+  // Only show the native confirm if it wasn't handled
+  if (!skipConfirm) {
+    if (!confirm(`Delete contact: ${f} ${l}?`)) return;
+  }
 
   const msgEl = document.getElementById("contactDeleteResult") || document.getElementById("colorSearchResult");
 
