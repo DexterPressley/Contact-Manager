@@ -293,6 +293,14 @@ input[type="text"], input[type="password"]{
   border-left: 1px solid var(--border);
 }
 
+body.contacts #searchText {
+  width: 100%;
+  max-width: none;
+}
+body.contacts #searchColorButton {
+  margin-left: 10px;
+}
+
 /* When editing, keep row height tidy */
 .table tbody tr[data-editing="1"] td { padding-top: 8px; padding-bottom: 8px; }
 
@@ -307,6 +315,11 @@ body.contacts #addPhone {
 
 body.contacts #addEmail {
   max-width: 360px;
+}
+
+body.contacts #addEmail {
+  display: block;
+  margin: 0 auto;       /* centers horizontally */
 }
 
 /* ============================
