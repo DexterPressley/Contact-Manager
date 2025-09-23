@@ -282,7 +282,23 @@ function searchContacts(query) {
     return;
   }
 
-  setSearchMessage("Searching...");
+  // small helper: set message, optionally auto-clear after 2.5s
+  function _setMsg(msg, autoClear = false) {
+    // cancel any prior auto-clear timer
+    if (window._searchMsgTimer) {
+      try { clearTimeout(window._searchMsgTimer); } catch (_) {}
+      window._searchMsgTimer = null;
+    }
+    setSearchMessage(msg || "");
+    if (autoClear) {
+      window._searchMsgTimer = setTimeout(() => {
+        setSearchMessage("");
+        window._searchMsgTimer = null;
+      }, 2500);
+    }
+  }
+
+  _setMsg("Searching...");
 
   if (_inflightSearchXhr) {
     try { _inflightSearchXhr.abort(); } catch (_) {}
@@ -298,27 +314,37 @@ function searchContacts(query) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState !== 4) return;
 
+    // ignore stale responses
     if (_inflightSearchXhr !== xhr) return;
     _inflightSearchXhr = null;
 
     if (xhr.status !== 200) {
-      setSearchMessage("Search failed (HTTP " + xhr.status + ")");
-      clearSearchResults();
+      // keep error visible (no auto-clear)
+      _setMsg("Search failed (HTTP " + xhr.status + ")", false);
+      clearSearchResults(); // this clears the table/list
       return;
     }
 
     let out = {};
     try { out = JSON.parse(xhr.responseText); } catch (_) {}
 
+    // Backend sends an error string for empty results sometimes
     if (out.error && out.error.length) {
-      setSearchMessage(out.error); // e.g., "No Contacts Found"
-      clearSearchResults();
+      clearSearchResults();             // clear table first
+      _setMsg("No contacts found", true); // then show + auto-clear
       return;
     }
 
     const entries = Array.isArray(out.entries) ? out.entries : [];
     renderSearchResults(entries);
-    setSearchMessage(entries.length ? "Results found" : "No matching contacts");
+
+    if (entries.length) {
+      // show success then auto-clear
+      _setMsg("Results found", true);
+    } else {
+      // no entries, no backend error -> still treat as none found
+      _setMsg("No contacts found", true);
+    }
   };
 
   xhr.send(payload);
