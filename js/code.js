@@ -58,50 +58,77 @@ function doLogin()
 
 function doSignup()
 {
-  let firstName = document.getElementById("firstName").value;
-  let lastName = document.getElementById("lastName").value;
-  let login = document.getElementById("signupUsername").value;
-  let password = document.getElementById("signupPassword").value;
-  let confirmPassword = document.getElementById("signupConfirm").value;
+  const sFirstName = document.getElementById("firstName").value;
+  const sLastName  = document.getElementById("lastName").value;
+  const sLogin     = document.getElementById("signupUsername").value;
+  const sPassword  = document.getElementById("signupPassword").value;
+  const confirmPassword = document.getElementById("signupConfirm").value;
 
-  document.getElementById("signupResult").innerHTML = "";
+  const outEl = document.getElementById("signupResult");
+  outEl.innerHTML = "";
 
-  if (password !== confirmPassword) {
-    document.getElementById("signupResult").innerHTML = "Passwords do not match";
+  if (sPassword !== confirmPassword) {
+    outEl.innerHTML = "Passwords do not match";
     return;
   }
 
-  let tmp = { firstName, lastName, login, password };
-  let jsonPayload = JSON.stringify(tmp);
-  let url = urlBase + 'Register' + extension;
+  const regPayload = JSON.stringify({ firstName: sFirstName, lastName: sLastName, login: sLogin, password: sPassword });
+  const regUrl = urlBase + 'Register' + extension;
 
-  let xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", regUrl, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  try {
-    xhr.onreadystatechange = function() {
-      if (this.readyState === 4) {
-        if (this.status !== 200) {
-          document.getElementById("signupResult").innerHTML = "Signup failed (HTTP " + this.status + ")";
-          return;
-        }
 
-        let jsonObject = {};
-        try { jsonObject = JSON.parse(xhr.responseText); } catch (e) {}
+  xhr.onreadystatechange = function(){
+    if (xhr.readyState !== 4) return;
 
-        if (jsonObject.error && jsonObject.error !== "") {
-          document.getElementById("signupResult").innerHTML = jsonObject.error;
-          return;
-        }
+    if (xhr.status !== 200) {
+      outEl.innerHTML = "Signup failed (HTTP " + xhr.status + ")";
+      return;
+    }
 
-        document.getElementById("signupResult").innerHTML = "Account created successfully!";
-        window.location.href = "index.html";
+    let regResp = {};
+    try { regResp = JSON.parse(xhr.responseText); } catch (_) {}
+
+    if (regResp.error && regResp.error !== "") {
+      outEl.innerHTML = regResp.error;
+      return;
+    }
+
+    // Immediately log them in (reuse Login)
+    const loginUrl = urlBase + 'Login' + extension;
+    const loginPayload = JSON.stringify({ login: sLogin, password: sPassword });
+
+    const xhr2 = new XMLHttpRequest();
+    xhr2.open("POST", loginUrl, true);
+    xhr2.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    xhr2.onreadystatechange = function(){
+      if (xhr2.readyState !== 4) return;
+
+      if (xhr2.status !== 200) {
+        outEl.innerHTML = "Account created, but auto-login failed (HTTP " + xhr2.status + "). Please log in.";
+        return;
+      }
+
+      let loginResp = {};
+      try { loginResp = JSON.parse(xhr2.responseText); } catch (_) {}
+
+      // Update globals (NOT locals) so saveCookie writes correct values
+      userId    = loginResp.id || 0;
+      firstName = loginResp.firstName || sFirstName || "";
+      lastName  = loginResp.lastName  || sLastName  || "";
+
+      if (userId > 0) {
+        saveCookie();
+        window.location.href = "color.html";
+      } else {
+        outEl.innerHTML = "Account created. Please log in.";
       }
     };
-    xhr.send(jsonPayload);
-  } catch (err) {
-    document.getElementById("signupResult").innerHTML = err.message;
-  }
+    xhr2.send(loginPayload);
+  };
+
+  xhr.send(regPayload);
 }
 
 function saveCookie()
