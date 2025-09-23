@@ -420,7 +420,7 @@ function renderSearchResults(entries) {
     const cActions = document.createElement("td");
     cActions.innerHTML = `
       <button class="btn" onclick="enterEditMode(this)">✏️ Edit</button>
-      <button class="btn btn--danger" onclick="deleteContact('${jsStr(first)}','${jsStr(theLast)}')">🗑️ Delete</button>
+      <button class="btn btn--danger" onclick="confirmDeleteUI('${jsStr(first)}','${jsStr(theLast)}')">🗑️ Delete</button>
     `;
 
     tr.appendChild(cFirst);
@@ -456,7 +456,7 @@ function enterEditMode(btn){
   // actions: Save/Cancel
   tr.children[4].innerHTML = `
     <button class="btn" onclick="saveEdit(this)">💾 Save</button>
-    <button class="btn btn--danger" onclick="cancelEdit(this)">✖ Cancel</button>
+    <button class="btn" onclick="cancelEdit(this)">✖ Cancel</button>
   `;
 }
 
@@ -471,7 +471,7 @@ function cancelEdit(btn){
 
   tr.children[4].innerHTML = `
     <button class="btn" onclick="enterEditMode(this)">✏️ Edit</button>
-    <button class="btn btn--danger" onclick="deleteContact('${jsStr(tr.dataset.origFirst || "")}','${jsStr(tr.dataset.origLast || "")}')">🗑️ Delete</button>
+    <button class="btn btn--danger" onclick="confirmDeleteUI('${jsStr(tr.dataset.origFirst || "")}','${jsStr(tr.dataset.origLast || "")}')">🗑️ Delete</button>
   `;
 
   tr.dataset.editing = "0";
@@ -543,7 +543,7 @@ function saveEdit(btn){
 
     tr.children[4].innerHTML = `
       <button class="btn" onclick="enterEditMode(this)">✏️ Edit</button>
-      <button class="btn btn--danger" onclick="deleteContact('${jsStr(first)}','${jsStr(last)}')">🗑️ Delete</button>
+      <button class="btn btn--danger" onclick="confirmDeleteUI('${jsStr(first)}','${jsStr(last)}')">🗑️ Delete</button>
     `;
 
     tr.dataset.editing = "0";
@@ -645,5 +645,43 @@ function deleteContact(first, last) {
 // Helper to safely escape values in CSS selectors
 function cssSel(s) {
   return String(s ?? "").replace(/["\\]/g, "\\$&");
+}
+
+// Open the custom modal and call deleteContact(...) on confirm
+function confirmDeleteUI(first, last) {
+  const modal     = document.getElementById('deleteModal');
+  const msgEl     = document.getElementById('delMessage');
+  const btnOk     = document.getElementById('delConfirm');
+  const btnCancel = document.getElementById('delCancel');
+  const overlay   = modal?.querySelector('[data-close]');
+
+  if (!modal || !msgEl || !btnOk || !btnCancel || !overlay) {
+    // Fallback: if modal HTML isn't present, use native confirm
+    if (confirm(`Delete contact: ${first} ${last}?`)) {
+      deleteContact(first, last, true); // skipConfirm=true
+    }
+    return;
+  }
+
+  msgEl.textContent = `Delete contact: ${first} ${last}? This action cannot be undone.`;
+
+  // Clean old handlers
+  btnOk.onclick = null;
+  btnCancel.onclick = null;
+  overlay.onclick = null;
+
+  const onKey = (e) => { if (e.key === 'Escape') closeModal(); };
+
+  function closeModal(){
+    modal.setAttribute('aria-hidden','true');
+    document.removeEventListener('keydown', onKey);
+  }
+
+  btnOk.onclick     = () => { closeModal(); deleteContact(first, last, true); }; // true = skip native confirm
+  btnCancel.onclick = () => { closeModal(); };
+  overlay.onclick   = () => { closeModal(); };
+
+  modal.setAttribute('aria-hidden','false');
+  document.addEventListener('keydown', onKey);
 }
 

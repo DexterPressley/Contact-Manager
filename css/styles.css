@@ -391,19 +391,27 @@ select{
   gap: 20px;
 }
 
-/* Make table action buttons normal-sized */
+/* Make table action buttons normal-sized, with brand as default */
 .table .buttons,
-.table td button {
+.table td .btn {
   font-size: 0.9rem;
   padding: 6px 10px;
   width: auto;
   margin: 0;
   border-radius: 8px;
-  background: var(--danger);
+  background: var(--brand);
   color: #fff;
 }
 .table .buttons:hover,
-.table td button:hover {
+.table td .btn:hover {
+  background: var(--brand-hover);
+}
+
+/* Only .btn--danger stays red (e.g., Delete, Logout) */
+.table td .btn--danger {
+  background: var(--danger);
+}
+.table td .btn--danger:hover {
   background: var(--danger-hover);
 }
 
@@ -569,4 +577,92 @@ body{
 }
 
 .msg:empty { display:none; }
+
+/* ============================
+   Custom Cream Modal
+============================ */
+.cm-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: var(--font);
+}
+
+.cm-modal[aria-hidden="true"] {
+  display: none;
+}
+
+.cm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+.cm-dialog {
+  position: relative;
+  background: var(--bg); /* cream */
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  width: 90%;
+  max-width: 400px;
+  z-index: 1;
+  animation: popIn 0.2s ease-out;
+}
+
+.cm-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cm-icon {
+  font-size: 1.4rem;
+}
+
+.cm-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cm-text {
+  font-size: 0.95rem;
+  margin: 0 0 16px 0;
+  color: var(--muted);
+}
+
+.cm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.cm-actions .btn {
+  background: var(--brand);
+  color: #fff;
+}
+
+.cm-actions .btn:hover {
+  background: var(--brand-hover);
+}
+
+.cm-actions .btn.btn--danger {
+  background: var(--danger);
+}
+
+.cm-actions .btn.btn--danger:hover {
+  background: var(--danger-hover);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
 

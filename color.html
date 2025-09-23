@@ -91,6 +91,23 @@
       <!-- Delete card removed (inline delete happens in the Search results table) -->
     </div>
   </div>
+
+<!-- Delete Confirm Modal -->
+<div id="deleteModal" class="cm-modal" aria-hidden="true" role="dialog" aria-labelledby="delTitle" aria-modal="true">
+  <div class="cm-backdrop" data-close></div>
+  <div class="cm-dialog" role="document">
+    <div class="cm-header">
+      <span class="cm-icon">☕</span>
+      <h3 id="delTitle" class="cm-title">Delete contact?</h3>
+    </div>
+    <p id="delMessage" class="cm-text"></p>
+    <div class="cm-actions">
+      <button id="delCancel" class="btn">Cancel</button>
+      <button id="delConfirm" class="btn btn--danger">Yes, delete</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
 
