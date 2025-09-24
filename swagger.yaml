@@ -11,12 +11,36 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 paths:
+  /Register.php:
+    post:
+      tags:
+      - Users
+      summary: Enrolls new user
+      operationId: register
+      description: Adds new user to Users database
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: registrationItem
+        description: Registration
+        schema:
+          $ref: '#/definitions/Registration'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
   /Login.php:
     post:
       tags:
       - Users
       summary: Logs into Contact Manager User account
-      operationId: dlLogin
+      operationId: login
       description: Logs into Contact Manager User account
       consumes:
       - application/json
@@ -35,7 +59,7 @@ paths:
           description: URL Not Found
         500:
           description: Server Error
-  /AddContact.php:
+  /AddContacts.php:
     post:
       tags:
       - Contacts
@@ -48,13 +72,10 @@ paths:
       - application/json
       parameters:
       - in: body
-        firstName: firstName
-        lastName: lastName
-        phone: phoneNumber
-        email: emailAddress
-        description: Contact
+        name: addItem
+        description: Contact information to be added
         schema:
-          $ref: '#/definitions/Contact'
+          $ref: '#/definitions/Add'
       responses:
         200:
           description: OK
@@ -62,35 +83,101 @@ paths:
           description: URL Not Found 
         500:
           description: Server Error
-  /Register.php:
+  /SearchContacts.php:
     post:
       tags:
-      - Users
-      summary: Enrolls new user
-      operationId: register
-      description: Adds new user to Users database
+      - Contacts
+      summary: Searches for contacts
+      operationId: searchContacts
+      description: Returns a list of Contacts associated with User.
       consumes:
       - application/json
       produces:
       - application/json
       parameters:
       - in: body
-        firstName: firstName
-        lastName: lastName
-        login: desiredUsername
-        password: preferredPassword
-        description: Registration
+        name: searchItem
+        description: Search term and associated User
         schema:
-          $ref: '#/definitions/Registration'
+          $ref: '#/definitions/Search'
       responses:
         200:
           description: OK
         404:
-          description: URL Not Found
+          description: URL Not Found 
         500:
           description: Server Error
+  /EditContacts.php:
+    put:
+      tags:
+      - Contacts
+      summary: Edit a contact
+      operationId: editContacts
+      description: Returns a list of Contacts associated with User.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: editItem
+        description: Edited values for contact
+        schema:
+          $ref: '#/definitions/Edit'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found 
+        500:
+          description: Server Error
+  /DeleteContacts.php:
+    delete:
+      tags:
+      - Contacts
+      summary: Delete a contact
+      operationId: deleteContacts
+      description: Remove Contact from User's contact list.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: deleteItem
+        description: Qualifiers for deletion
+        schema:
+          $ref: '#/definitions/Delete'
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found 
+        500:
+          description: Server Error
+
           
 definitions:
+  Registration:
+    type: object
+    required:
+    - firstName
+    - lastName
+    - login
+    - password
+    properties:
+      firstName:
+        type: string
+        example: "Tom"
+      lastName:
+        type: string
+        example: "Jackson"
+      login:
+        type: string
+        example: "tjack58"
+      password:
+        type: string
+        example: "ThisIsNotAnIdealPassword123456!!!"
   Login:
     type: object
     required:
@@ -103,7 +190,7 @@ definitions:
       password:
         type: string
         example: "secret"
-  Contact:
+  Add:
     type: object
     required:
     - userId
@@ -127,13 +214,26 @@ definitions:
       email:
         type: string
         example: "Tom.Jackson@email.com"
-  Registration:
+  Search:
+    type: object
+    required:
+    - search
+    - userId
+    properties:
+      search:
+        type: string
+        example: "substringOfNamesOrPhoneOrEmail"
+      userId:
+        type: integer
+        example: 1
+  Edit:
     type: object
     required:
     - firstName
     - lastName
-    - login
-    - password
+    - phone
+    - email
+    - Id
     properties:
       firstName:
         type: string
@@ -141,15 +241,34 @@ definitions:
       lastName:
         type: string
         example: "Jackson"
-      login:
+      phone:
         type: string
-        example: "tjack58"
-      password:
+        example: "234-5678"
+      email:
         type: string
-        example: "ThisIsNotAnIdealPassword123456!!!"
+        example: "Tom.Jackson@email.com"
+      Id:
+        type: integer
+        example: 1
+  Delete:
+    type: object
+    required:
+    - firstName
+    - lastName
+    - userId
+    properties:
+      firstName:
+        type: string
+        example: "Tom"
+      lastName:
+        type: string
+        example: "Jackson"
+      userId:
+        type: integer
+        example: 1
 
 
-host: colorsdigitalocean.xyz
+host: barista-book.xyz
 basePath: /LAMPAPI
 schemes:
 - http
