@@ -749,3 +749,28 @@ body{
   margin: 0 4px;
 }
 
+/* Easter egg! */
+
+.easter_egg {
+   position: fixed;
+   bottom: 20px;
+   right: 20px;
+   z-index: 1000;
+   opacity: 0.5;
+   transition: all 0.3s ease;
+   border-radius: 8px;
+   overflow: hidden;
+}
+
+.easter_egg img {
+   display: block;
+   width: 40px;
+   height: 40px;
+   object-fit: contain; 
+}
+
+.easter_egg:hover {
+   opacity: 1;
+   transform: translateY(-1px);
+}
+
