@@ -740,3 +740,12 @@ body{
   to   { transform: scale(1); opacity: 1; }
 }
 
+/* Center action column */
+.table th:last-child,
+.table td:last-child {
+  text-align: center;
+}
+.table td:last-child .btn {
+  margin: 0 4px;
+}
+
